@@ -10,7 +10,13 @@
 
 @class SMTCPServer;
 
+@protocol SMTCPServerDelegate
+- (void)SMTCPServer:(SMTCPServer *) server didSendMessage: (NSString *) message;
+@end
+
 @interface SMTCPServer: NSThread
+
+@property (weak, nonatomic) id<SMTCPServerDelegate> delegate;
 
 - (void)bindWithPort: (NSInteger) port;
 - (void)listen;

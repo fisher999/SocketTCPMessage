@@ -18,6 +18,8 @@
 		5765D2D92362C7970011881A /* SocketStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5765D2D82362C7970011881A /* SocketStream.swift */; };
 		57C724DA2365812D00DD1BB0 /* SMTCPSocketStreams.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C724D92365812D00DD1BB0 /* SMTCPSocketStreams.m */; };
 		57C724DE2365998200DD1BB0 /* SMTCPMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C724DD2365998200DD1BB0 /* SMTCPMulticastDelegate.m */; };
+		57C724E32366A5CA00DD1BB0 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C724E12366A5CA00DD1BB0 /* MessageCell.swift */; };
+		57C724E42366A5CA00DD1BB0 /* MessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57C724E22366A5CA00DD1BB0 /* MessageCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +53,8 @@
 		57C724D92365812D00DD1BB0 /* SMTCPSocketStreams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMTCPSocketStreams.m; sourceTree = "<group>"; };
 		57C724DC2365996F00DD1BB0 /* SMTCPMulticastDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMTCPMulticastDelegate.h; sourceTree = "<group>"; };
 		57C724DD2365998200DD1BB0 /* SMTCPMulticastDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMTCPMulticastDelegate.m; sourceTree = "<group>"; };
+		57C724E12366A5CA00DD1BB0 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
+		57C724E22366A5CA00DD1BB0 /* MessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -135,6 +139,7 @@
 		5765D2D42362C6430011881A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				57C724DF2366A5A700DD1BB0 /* Cells */,
 				5765D2C42362C3890011881A /* MainController.swift */,
 				5765D2D52362C6540011881A /* MainController.xib */,
 			);
@@ -173,6 +178,23 @@
 				57C724DD2365998200DD1BB0 /* SMTCPMulticastDelegate.m */,
 			);
 			path = MulticastDelegate;
+			sourceTree = "<group>";
+		};
+		57C724DF2366A5A700DD1BB0 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				57C724E02366A5B000DD1BB0 /* MessageCell */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		57C724E02366A5B000DD1BB0 /* MessageCell */ = {
+			isa = PBXGroup;
+			children = (
+				57C724E12366A5CA00DD1BB0 /* MessageCell.swift */,
+				57C724E22366A5CA00DD1BB0 /* MessageCell.xib */,
+			);
+			path = MessageCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,6 +278,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5765D2CD2362C38D0011881A /* LaunchScreen.storyboard in Resources */,
+				57C724E42366A5CA00DD1BB0 /* MessageCell.xib in Resources */,
 				5765D2D62362C6540011881A /* MainController.xib in Resources */,
 				5765D2CA2362C38D0011881A /* Assets.xcassets in Resources */,
 			);
@@ -281,6 +304,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				5765D2C52362C3890011881A /* MainController.swift in Sources */,
+				57C724E32366A5CA00DD1BB0 /* MessageCell.swift in Sources */,
 				5765D2C12362C3890011881A /* AppDelegate.swift in Sources */,
 				5765D2D92362C7970011881A /* SocketStream.swift in Sources */,
 			);

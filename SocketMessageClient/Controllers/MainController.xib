@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
@@ -10,17 +10,21 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainController" customModule="SocketMessageClient" customModuleProvider="target">
             <connections>
+                <outlet property="tableView" destination="Xu9-2h-SG3" id="yya-b7-CVO"/>
                 <outlet property="textField" destination="GPO-lH-pOF" id="5bR-cc-MeW"/>
                 <outlet property="view" destination="iN0-l3-epB" id="Ufe-8J-U4z"/>
             </connections>
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="GPO-lH-pOF">
-                    <rect key="frame" x="16" y="431" width="382" height="34"/>
+                    <rect key="frame" x="20" y="617" width="277" height="34"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="34" id="u5M-SW-j0R"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                     <textInputTraits key="textInputTraits"/>
                     <connections>
@@ -28,11 +32,11 @@
                     </connections>
                 </textField>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Bop-wS-elN">
-                    <rect key="frame" x="182" y="768" width="50" height="24"/>
+                    <rect key="frame" x="305" y="617" width="50" height="34"/>
                     <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="50" id="27L-sY-2TB"/>
-                        <constraint firstAttribute="height" constant="24" id="VU5-cy-TSj"/>
+                        <constraint firstAttribute="height" constant="34" id="63B-e5-yUW"/>
+                        <constraint firstAttribute="width" constant="50" id="aSt-zU-KG5"/>
                     </constraints>
                     <state key="normal" title="Send">
                         <color key="titleColor" systemColor="secondarySystemGroupedBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -41,16 +45,22 @@
                         <action selector="sendButtonDidTapped:" destination="-1" eventType="touchUpInside" id="VSk-je-9mD"/>
                     </connections>
                 </button>
+                <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Xu9-2h-SG3">
+                    <rect key="frame" x="20" y="30" width="335" height="579"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                </tableView>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Bop-wS-elN" secondAttribute="bottom" constant="70" id="1va-1z-7OV"/>
-                <constraint firstItem="GPO-lH-pOF" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="16" id="AQl-nf-wKa"/>
-                <constraint firstItem="GPO-lH-pOF" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="KZg-Db-TdQ"/>
-                <constraint firstItem="Bop-wS-elN" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="VJh-Eh-yT6"/>
-                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="GPO-lH-pOF" secondAttribute="trailing" constant="16" id="jej-aE-jcI"/>
-                <constraint firstItem="GPO-lH-pOF" firstAttribute="centerY" secondItem="iN0-l3-epB" secondAttribute="centerY" id="wMX-9p-aLA"/>
-                <constraint firstItem="Bop-wS-elN" firstAttribute="top" relation="greaterThanOrEqual" secondItem="GPO-lH-pOF" secondAttribute="bottom" constant="16" id="yAd-1n-44E"/>
+                <constraint firstItem="Bop-wS-elN" firstAttribute="leading" secondItem="GPO-lH-pOF" secondAttribute="trailing" constant="8" id="J1E-1u-daQ"/>
+                <constraint firstItem="Xu9-2h-SG3" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="LFb-zw-1pa"/>
+                <constraint firstItem="GPO-lH-pOF" firstAttribute="top" secondItem="Xu9-2h-SG3" secondAttribute="bottom" constant="8" id="Qd1-dP-nih"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="GPO-lH-pOF" secondAttribute="bottom" constant="16" id="dJk-oD-Yca"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="bottom" secondItem="Bop-wS-elN" secondAttribute="bottom" constant="16" id="e3e-Ss-gT4"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Xu9-2h-SG3" secondAttribute="trailing" constant="20" id="kTO-nu-KmS"/>
+                <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="Bop-wS-elN" secondAttribute="trailing" constant="20" id="l3b-9n-NJF"/>
+                <constraint firstItem="GPO-lH-pOF" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="20" id="nVS-xP-034"/>
+                <constraint firstItem="Xu9-2h-SG3" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="30" id="yT3-Ua-BaX"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>
             <point key="canvasLocation" x="137.68115942028987" y="126.5625"/>

@@ -8,8 +8,9 @@
 
 #import <Foundation/Foundation.h>
 #import "SMTCPSocketStreams.h"
+#import "SMTCPServer.h"
 
-@interface SMTCPSocketStreams () <NSStreamDelegate>
+@interface SMTCPSocketStreams () <NSStreamDelegate, SMTCPServerDelegate>
 @end
 
 @implementation SMTCPSocketStreams {
@@ -69,6 +70,12 @@
 
 - (void)dealloc {
     [self close];
+}
+
+#pragma mark: -SMTCPSocketServerDelegate
+
+- (void)SMTCPServer:(SMTCPServer *)server didSendMessage:(NSString *)message {
+    [self writeMessage:message];
 }
 
 @end

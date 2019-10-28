@@ -13,7 +13,7 @@
 #include <Foundation/Foundation.h>
 #import "SMTCPSocketStreams.h"
 
-@interface SMTCPServer ()
+@interface SMTCPServer () <SMTCPSocketStreamsDelegate>
 @property (strong, nonatomic) SMTCPSocketStreams *socketStreams;
 @end
 
@@ -63,8 +63,11 @@
         kCFRunLoopDefaultMode);
 }
 
-static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void *data, void *info)
-{
+- (void)sendMessage:(NSString *)message {
+    [_delegate SMTCPServer:self didSendMessage:message];
+}
+
+static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
     NSLog(@"RECIEVED CONNECTION REQUEST \n");
     if (kCFSocketAcceptCallBack == type) {
         CFSocketNativeHandle nativeSocketHandle = *(CFSocketNativeHandle *)data;
@@ -72,6 +75,7 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
         CFSocketContext *context = (CFSocketContext *)info;
         SMTCPServer *pointerToSelf = (__bridge SMTCPServer *)context->info;
         [socketStreams.delegate addDelegate:pointerToSelf];
+        pointerToSelf.delegate = socketStreams;
         [socketStreams handleSocketEventsWithNativeHandle:nativeSocketHandle];
     }
 }
@@ -84,6 +88,14 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 - (void)dealloc
 {
     [self close];
+}
+
+#pragma mark: SMTCPSocketStreamsDelegate
+
+- (void)SMTCPSocketStreams:(SMTCPSocketStreams *)socketStreams didReceivedMessage:(NSString *)message {
+    if ([message isEqualToString:@"Do you understand me?"]) {
+        [self sendMessage:@"Yes, I do"];
+    }
 }
 
 @end
