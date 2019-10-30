@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
-        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="MainController" customModule="SocketMessageClient" customModuleProvider="target">
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ChatController">
             <connections>
                 <outlet property="tableView" destination="Xu9-2h-SG3" id="yya-b7-CVO"/>
                 <outlet property="textField" destination="GPO-lH-pOF" id="5bR-cc-MeW"/>

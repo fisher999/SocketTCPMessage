@@ -7,20 +7,14 @@
 //
 
 #import <Foundation/Foundation.h>
-
-@class SMTCPServer;
-
-@protocol SMTCPServerDelegate
-- (void)SMTCPServer:(SMTCPServer *) server didSendMessage: (NSString *) message;
-@end
+#import "SMTCPSocketStreams.h"
 
 @interface SMTCPServer: NSThread
 
-@property (weak, nonatomic) id<SMTCPServerDelegate> delegate;
-
-- (void)bindWithPort: (NSInteger) port;
+- (bool)bindWithPort: (NSInteger) port;
+- (bool)bindWithIntervalFromFirstPort: (NSInteger) firstPort toEndPort: (NSInteger) endPort;
 - (void)listen;
-- (void)sendMessage: (NSString *) message;
+- (void)sendMessage: (NSString *) message toSocketStreams: (SMTCPSocketStreams *) socketStreams;
 - (void)close;
 
 @end

@@ -20,7 +20,7 @@
 @implementation SMTCPServer {
     CFSocketRef cfSocket;
 }
-- (void)bindWithPort: (NSInteger) port {
+- (bool)bindWithPort: (NSInteger) port {
     CFSocketContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
     cfSocket = CFSocketCreate(
         kCFAllocatorDefault,
@@ -44,8 +44,25 @@
         (UInt8 *)&sin,
         sizeof(sin));
      
-    CFSocketSetAddress(cfSocket, sincfd);
+    CFSocketError error = CFSocketSetAddress(cfSocket, sincfd);
     CFRelease(sincfd);
+    if (error) {
+        [self close];
+        return false;
+    } else {
+        NSLog(@"Binded with port: %li", port);
+        return true;
+    }
+}
+
+- (bool)bindWithIntervalFromFirstPort:(NSInteger)firstPort toEndPort:(NSInteger)endPort {
+    for (NSInteger port = firstPort; port <= endPort; port++) {
+        if ([self bindWithPort:port]) {
+            return true;
+        }
+    }
+    NSLog(@"Can not bind with interval: (%li - %li)", firstPort, endPort);
+    return false;
 }
 
 - (void)listen {
@@ -56,15 +73,15 @@
         kCFAllocatorDefault,
         cfSocket,
         0);
-     
+    NSLog(@"%@", self);
     CFRunLoopAddSource(
         CFRunLoopGetCurrent(),
         socketsource,
         kCFRunLoopDefaultMode);
 }
 
-- (void)sendMessage:(NSString *)message {
-    [_delegate SMTCPServer:self didSendMessage:message];
+- (void)sendMessage:(NSString *)message toSocketStreams:(SMTCPSocketStreams *)socketStreams {
+    [socketStreams writeMessage:message];
 }
 
 static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
@@ -72,10 +89,9 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     if (kCFSocketAcceptCallBack == type) {
         CFSocketNativeHandle nativeSocketHandle = *(CFSocketNativeHandle *)data;
         SMTCPSocketStreams *socketStreams = [[SMTCPSocketStreams alloc] init];
-        CFSocketContext *context = (CFSocketContext *)info;
-        SMTCPServer *pointerToSelf = (__bridge SMTCPServer *)context->info;
+        SMTCPServer *pointerToSelf = (__bridge SMTCPServer *)(info);
+        NSLog(@"%@", pointerToSelf);
         [socketStreams.delegate addDelegate:pointerToSelf];
-        pointerToSelf.delegate = socketStreams;
         [socketStreams handleSocketEventsWithNativeHandle:nativeSocketHandle];
     }
 }
@@ -94,7 +110,7 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 
 - (void)SMTCPSocketStreams:(SMTCPSocketStreams *)socketStreams didReceivedMessage:(NSString *)message {
     if ([message isEqualToString:@"Do you understand me?"]) {
-        [self sendMessage:@"Yes, I do"];
+        [self sendMessage:@"Yes, I do!" toSocketStreams:socketStreams];
     }
 }
 

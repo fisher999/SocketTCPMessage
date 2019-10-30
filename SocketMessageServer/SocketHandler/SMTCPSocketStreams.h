@@ -17,7 +17,7 @@
 
 @interface SMTCPSocketStreams : NSThread
 
-@property (weak, nonatomic) SMTCPMulticastDelegate<SMTCPSocketStreamsDelegate> *delegate;
+@property (strong, nonatomic) SMTCPMulticastDelegate<SMTCPSocketStreamsDelegate> *delegate;
 
 - (void)handleSocketEventsWithNativeHandle:(CFSocketNativeHandle) handle;
 - (void)writeMessage: (NSString *) message;

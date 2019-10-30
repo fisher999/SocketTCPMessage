@@ -13,9 +13,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        let controller  = MainController(withHost: "127.0.0.1", port: 2000)
+        let controller  = MainController()
+        let navController = UINavigationController(rootViewController: controller)
         self.window = UIWindow(frame: UIScreen.main.bounds)
-        self.window?.rootViewController = controller
+        self.window?.rootViewController = navController
         self.window?.makeKeyAndVisible()
         return true
     }

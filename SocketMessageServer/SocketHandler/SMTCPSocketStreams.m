@@ -10,12 +10,22 @@
 #import "SMTCPSocketStreams.h"
 #import "SMTCPServer.h"
 
-@interface SMTCPSocketStreams () <NSStreamDelegate, SMTCPServerDelegate>
+@interface SMTCPSocketStreams () <NSStreamDelegate>
 @end
 
 @implementation SMTCPSocketStreams {
     __strong NSInputStream *_inputStream;
     __strong NSOutputStream *_outputStream;
+    NSUInteger currentOffset;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        self.delegate = [[SMTCPMulticastDelegate alloc] init];
+    }
+    return self;
 }
 
 - (void)handleSocketEventsWithNativeHandle:(CFSocketNativeHandle) handle {
@@ -42,9 +52,16 @@
 
 - (void)writeMessage:(NSString *)message {
     NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
-    uint32_t length = (uint32_t)htonl([messageData length]);
-    [_outputStream write:(uint8_t *)&length maxLength:4];
-    [_outputStream write:[messageData bytes] maxLength:length];
+    uint8_t *dataBytes = (uint8_t *)[messageData bytes];
+    dataBytes += currentOffset;
+    NSUInteger length = [messageData length] - currentOffset > 1024 ? 1024 : [messageData length] - currentOffset;
+    NSUInteger sentLength = [_outputStream write: dataBytes maxLength: length];
+    if (sentLength > 0) {
+        currentOffset += sentLength;
+        if (currentOffset == [messageData length]) {
+            currentOffset = 0;
+        }
+    }
 }
 
 - (NSString *)readFromInputStream:(NSInputStream *) inputStream {

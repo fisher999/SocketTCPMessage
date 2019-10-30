@@ -10,7 +10,6 @@ import Foundation
 
 protocol SocketStreamDelegate: class {
     func socketStream(_ socketStream: SocketStream, receivedMessage message: String)
-    func socketStream(_ socketStream: SocketStream, didSendMessage message: String)
 }
 
 class SocketStream: NSObject {
@@ -53,7 +52,6 @@ class SocketStream: NSObject {
         inputStream = readStream!.takeRetainedValue()
         outputStream = writeStream!.takeRetainedValue()
         inputStream?.delegate = self
-        outputStream?.delegate = self
         inputStream?.schedule(in: .current, forMode: .common)
         outputStream?.schedule(in: .current, forMode: .common)
         inputStream?.open()
@@ -90,9 +88,6 @@ extension SocketStream: StreamDelegate {
         case is InputStream:
             let stream = aStream as! InputStream
             proposeInputStream(stream, withEvent: eventCode)
-        case is OutputStream:
-            let stream = aStream as! OutputStream
-            proposeOutputStream(stream, withEvent: eventCode)
         default:
             break
         }
@@ -104,18 +99,6 @@ extension SocketStream: StreamDelegate {
         switch event {
         case .hasBytesAvailable:
             readAvailableBytes(stream: inputStream)
-        default:
-            return
-        }
-    }
-    
-    private func proposeOutputStream(_ outputStream: OutputStream,
-                                     withEvent event: Stream.Event) {
-        switch event {
-        case .hasBytesAvailable:
-            if let message = lastMessage {
-                self.delegate?.socketStream(self, didSendMessage: message)
-            }
         default:
             return
         }

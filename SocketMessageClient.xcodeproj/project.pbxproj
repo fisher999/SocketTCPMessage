@@ -3,23 +3,35 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		34B9AD229AE4171CE8360A84 /* Pods_SocketMessageClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79580C6EE4A06BDF00348616 /* Pods_SocketMessageClient.framework */; };
 		570A076D23648E6200A9C26C /* SMTCPApplication.m in Sources */ = {isa = PBXBuildFile; fileRef = 570A076C23648E6200A9C26C /* SMTCPApplication.m */; };
 		573B23D723647C6400F3C3A0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B23D623647C6400F3C3A0 /* main.m */; };
 		573B23DF23647D0300F3C3A0 /* SMTCPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B23DE23647D0300F3C3A0 /* SMTCPServer.m */; };
+		5764A61323674362002B6B38 /* MDMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5764A61223674362002B6B38 /* MDMessage.swift */; };
+		5764A61623674608002B6B38 /* Date+Format.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5764A61523674608002B6B38 /* Date+Format.swift */; };
+		576597F42369DDDB00F67B67 /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576597F22369DDDB00F67B67 /* TaskCell.swift */; };
+		576597F52369DDDB00F67B67 /* TaskCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 576597F32369DDDB00F67B67 /* TaskCell.xib */; };
+		576597F82369DF0F00F67B67 /* ScanController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576597F62369DF0F00F67B67 /* ScanController.swift */; };
+		576597F92369DF0F00F67B67 /* ScanController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 576597F72369DF0F00F67B67 /* ScanController.xib */; };
+		576598022369F20800F67B67 /* DeviceCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 576598002369F20800F67B67 /* DeviceCell.swift */; };
+		576598032369F20800F67B67 /* DeviceCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 576598012369F20800F67B67 /* DeviceCell.xib */; };
 		5765D2C12362C3890011881A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5765D2C02362C3890011881A /* AppDelegate.swift */; };
-		5765D2C52362C3890011881A /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5765D2C42362C3890011881A /* MainController.swift */; };
+		5765D2C52362C3890011881A /* ChatController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5765D2C42362C3890011881A /* ChatController.swift */; };
 		5765D2CA2362C38D0011881A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5765D2C92362C38D0011881A /* Assets.xcassets */; };
 		5765D2CD2362C38D0011881A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5765D2CB2362C38D0011881A /* LaunchScreen.storyboard */; };
-		5765D2D62362C6540011881A /* MainController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5765D2D52362C6540011881A /* MainController.xib */; };
+		5765D2D62362C6540011881A /* ChatController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5765D2D52362C6540011881A /* ChatController.xib */; };
 		5765D2D92362C7970011881A /* SocketStream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5765D2D82362C7970011881A /* SocketStream.swift */; };
 		57C724DA2365812D00DD1BB0 /* SMTCPSocketStreams.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C724D92365812D00DD1BB0 /* SMTCPSocketStreams.m */; };
 		57C724DE2365998200DD1BB0 /* SMTCPMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C724DD2365998200DD1BB0 /* SMTCPMulticastDelegate.m */; };
 		57C724E32366A5CA00DD1BB0 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C724E12366A5CA00DD1BB0 /* MessageCell.swift */; };
 		57C724E42366A5CA00DD1BB0 /* MessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57C724E22366A5CA00DD1BB0 /* MessageCell.xib */; };
+		57F55EA82369CCD700FD39C3 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F55EA62369CCD700FD39C3 /* MainController.swift */; };
+		57F55EA92369CCD700FD39C3 /* MainController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57F55EA72369CCD700FD39C3 /* MainController.xib */; };
+		E6D045DB02487CC68CA349AC /* Pods_SocketMessageServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D249B515A80257E03D433936 /* Pods_SocketMessageServer.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -35,19 +47,29 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3F01BADE302EA000A54F3D49 /* Pods-SocketMessageClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketMessageClient.debug.xcconfig"; path = "Target Support Files/Pods-SocketMessageClient/Pods-SocketMessageClient.debug.xcconfig"; sourceTree = "<group>"; };
+		537ABE0718D07C1A27CF9A4C /* Pods-SocketMessageClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketMessageClient.release.xcconfig"; path = "Target Support Files/Pods-SocketMessageClient/Pods-SocketMessageClient.release.xcconfig"; sourceTree = "<group>"; };
 		570A076B23648E0200A9C26C /* SMTCPApplication.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMTCPApplication.h; sourceTree = "<group>"; };
 		570A076C23648E6200A9C26C /* SMTCPApplication.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMTCPApplication.m; sourceTree = "<group>"; };
 		573B23D423647C6400F3C3A0 /* SocketMessageServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SocketMessageServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		573B23D623647C6400F3C3A0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		573B23DE23647D0300F3C3A0 /* SMTCPServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMTCPServer.m; sourceTree = "<group>"; };
 		573B23E123647D3600F3C3A0 /* SMTCPServer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMTCPServer.h; sourceTree = "<group>"; };
+		5764A61223674362002B6B38 /* MDMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDMessage.swift; sourceTree = "<group>"; };
+		5764A61523674608002B6B38 /* Date+Format.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Format.swift"; sourceTree = "<group>"; };
+		576597F22369DDDB00F67B67 /* TaskCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
+		576597F32369DDDB00F67B67 /* TaskCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = TaskCell.xib; sourceTree = "<group>"; };
+		576597F62369DF0F00F67B67 /* ScanController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScanController.swift; sourceTree = "<group>"; };
+		576597F72369DF0F00F67B67 /* ScanController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ScanController.xib; sourceTree = "<group>"; };
+		576598002369F20800F67B67 /* DeviceCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceCell.swift; sourceTree = "<group>"; };
+		576598012369F20800F67B67 /* DeviceCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = DeviceCell.xib; sourceTree = "<group>"; };
 		5765D2BD2362C3890011881A /* SocketMessageClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SocketMessageClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		5765D2C02362C3890011881A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		5765D2C42362C3890011881A /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
+		5765D2C42362C3890011881A /* ChatController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatController.swift; sourceTree = "<group>"; };
 		5765D2C92362C38D0011881A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		5765D2CC2362C38D0011881A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5765D2CE2362C38D0011881A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		5765D2D52362C6540011881A /* MainController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainController.xib; sourceTree = "<group>"; };
+		5765D2D52362C6540011881A /* ChatController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatController.xib; sourceTree = "<group>"; };
 		5765D2D82362C7970011881A /* SocketStream.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SocketStream.swift; sourceTree = "<group>"; };
 		57C724D82365812100DD1BB0 /* SMTCPSocketStreams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMTCPSocketStreams.h; sourceTree = "<group>"; };
 		57C724D92365812D00DD1BB0 /* SMTCPSocketStreams.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMTCPSocketStreams.m; sourceTree = "<group>"; };
@@ -55,6 +77,12 @@
 		57C724DD2365998200DD1BB0 /* SMTCPMulticastDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMTCPMulticastDelegate.m; sourceTree = "<group>"; };
 		57C724E12366A5CA00DD1BB0 /* MessageCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageCell.swift; sourceTree = "<group>"; };
 		57C724E22366A5CA00DD1BB0 /* MessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageCell.xib; sourceTree = "<group>"; };
+		57F55EA62369CCD700FD39C3 /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
+		57F55EA72369CCD700FD39C3 /* MainController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainController.xib; sourceTree = "<group>"; };
+		79580C6EE4A06BDF00348616 /* Pods_SocketMessageClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SocketMessageClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		BBBF544ED0E5F384FB555946 /* Pods-SocketMessageServer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketMessageServer.release.xcconfig"; path = "Target Support Files/Pods-SocketMessageServer/Pods-SocketMessageServer.release.xcconfig"; sourceTree = "<group>"; };
+		D249B515A80257E03D433936 /* Pods_SocketMessageServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SocketMessageServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EFAA428EF7734D98F8819D30 /* Pods-SocketMessageServer.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketMessageServer.debug.xcconfig"; path = "Target Support Files/Pods-SocketMessageServer/Pods-SocketMessageServer.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,6 +90,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E6D045DB02487CC68CA349AC /* Pods_SocketMessageServer.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -69,6 +98,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				34B9AD229AE4171CE8360A84 /* Pods_SocketMessageClient.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -105,12 +135,66 @@
 			path = SocketServer;
 			sourceTree = "<group>";
 		};
+		5764A61123674352002B6B38 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				5764A61223674362002B6B38 /* MDMessage.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		5764A614236745FB002B6B38 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				5764A61523674608002B6B38 /* Date+Format.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		576597EE2369DD8700F67B67 /* ScanController */ = {
+			isa = PBXGroup;
+			children = (
+				576597FA2369DF1200F67B67 /* Cells */,
+				576597F62369DF0F00F67B67 /* ScanController.swift */,
+				576597F72369DF0F00F67B67 /* ScanController.xib */,
+			);
+			path = ScanController;
+			sourceTree = "<group>";
+		};
+		576597EF2369DDB600F67B67 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				576597F22369DDDB00F67B67 /* TaskCell.swift */,
+				576597F32369DDDB00F67B67 /* TaskCell.xib */,
+			);
+			path = Cell;
+			sourceTree = "<group>";
+		};
+		576597FA2369DF1200F67B67 /* Cells */ = {
+			isa = PBXGroup;
+			children = (
+				576597FF2369F1F100F67B67 /* DeviceCell */,
+			);
+			path = Cells;
+			sourceTree = "<group>";
+		};
+		576597FF2369F1F100F67B67 /* DeviceCell */ = {
+			isa = PBXGroup;
+			children = (
+				576598002369F20800F67B67 /* DeviceCell.swift */,
+				576598012369F20800F67B67 /* DeviceCell.xib */,
+			);
+			path = DeviceCell;
+			sourceTree = "<group>";
+		};
 		5765D2B42362C3890011881A = {
 			isa = PBXGroup;
 			children = (
 				5765D2BF2362C3890011881A /* SocketMessageClient */,
 				573B23D523647C6400F3C3A0 /* SocketMessageServer */,
 				5765D2BE2362C3890011881A /* Products */,
+				63B22298276CFA02ED9EE2E4 /* Pods */,
+				BE099E4B0733B46C49678BB7 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -126,6 +210,8 @@
 		5765D2BF2362C3890011881A /* SocketMessageClient */ = {
 			isa = PBXGroup;
 			children = (
+				5764A614236745FB002B6B38 /* Extensions */,
+				5764A61123674352002B6B38 /* Model */,
 				5765D2D72362C73A0011881A /* Service */,
 				5765D2D42362C6430011881A /* Controllers */,
 				5765D2C02362C3890011881A /* AppDelegate.swift */,
@@ -139,9 +225,10 @@
 		5765D2D42362C6430011881A /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				576597EE2369DD8700F67B67 /* ScanController */,
+				57F55EA52369CCBC00FD39C3 /* MainController */,
+				57F55EA42369CBE500FD39C3 /* ChatController */,
 				57C724DF2366A5A700DD1BB0 /* Cells */,
-				5765D2C42362C3890011881A /* MainController.swift */,
-				5765D2D52362C6540011881A /* MainController.xib */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -197,6 +284,45 @@
 			path = MessageCell;
 			sourceTree = "<group>";
 		};
+		57F55EA42369CBE500FD39C3 /* ChatController */ = {
+			isa = PBXGroup;
+			children = (
+				5765D2C42362C3890011881A /* ChatController.swift */,
+				5765D2D52362C6540011881A /* ChatController.xib */,
+			);
+			path = ChatController;
+			sourceTree = "<group>";
+		};
+		57F55EA52369CCBC00FD39C3 /* MainController */ = {
+			isa = PBXGroup;
+			children = (
+				576597EF2369DDB600F67B67 /* Cell */,
+				57F55EA62369CCD700FD39C3 /* MainController.swift */,
+				57F55EA72369CCD700FD39C3 /* MainController.xib */,
+			);
+			path = MainController;
+			sourceTree = "<group>";
+		};
+		63B22298276CFA02ED9EE2E4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				3F01BADE302EA000A54F3D49 /* Pods-SocketMessageClient.debug.xcconfig */,
+				537ABE0718D07C1A27CF9A4C /* Pods-SocketMessageClient.release.xcconfig */,
+				EFAA428EF7734D98F8819D30 /* Pods-SocketMessageServer.debug.xcconfig */,
+				BBBF544ED0E5F384FB555946 /* Pods-SocketMessageServer.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		BE099E4B0733B46C49678BB7 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				79580C6EE4A06BDF00348616 /* Pods_SocketMessageClient.framework */,
+				D249B515A80257E03D433936 /* Pods_SocketMessageServer.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -204,6 +330,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 573B23DA23647C6400F3C3A0 /* Build configuration list for PBXNativeTarget "SocketMessageServer" */;
 			buildPhases = (
+				4E25D3DB1077FACA8B4B85B6 /* [CP] Check Pods Manifest.lock */,
 				573B23D023647C6400F3C3A0 /* Sources */,
 				573B23D123647C6400F3C3A0 /* Frameworks */,
 				573B23D223647C6400F3C3A0 /* CopyFiles */,
@@ -221,9 +348,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 5765D2D12362C38D0011881A /* Build configuration list for PBXNativeTarget "SocketMessageClient" */;
 			buildPhases = (
+				49E758AB112ADA26905AB704 /* [CP] Check Pods Manifest.lock */,
 				5765D2B92362C3890011881A /* Sources */,
 				5765D2BA2362C3890011881A /* Frameworks */,
 				5765D2BB2362C3890011881A /* Resources */,
+				C95FC21F12A63DC436E1F823 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -278,13 +407,81 @@
 			buildActionMask = 2147483647;
 			files = (
 				5765D2CD2362C38D0011881A /* LaunchScreen.storyboard in Resources */,
+				576597F92369DF0F00F67B67 /* ScanController.xib in Resources */,
+				57F55EA92369CCD700FD39C3 /* MainController.xib in Resources */,
 				57C724E42366A5CA00DD1BB0 /* MessageCell.xib in Resources */,
-				5765D2D62362C6540011881A /* MainController.xib in Resources */,
+				5765D2D62362C6540011881A /* ChatController.xib in Resources */,
+				576597F52369DDDB00F67B67 /* TaskCell.xib in Resources */,
 				5765D2CA2362C38D0011881A /* Assets.xcassets in Resources */,
+				576598032369F20800F67B67 /* DeviceCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		49E758AB112ADA26905AB704 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SocketMessageClient-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4E25D3DB1077FACA8B4B85B6 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-SocketMessageServer-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		C95FC21F12A63DC436E1F823 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SocketMessageClient/Pods-SocketMessageClient-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-SocketMessageClient/Pods-SocketMessageClient-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SocketMessageClient/Pods-SocketMessageClient-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		573B23D023647C6400F3C3A0 /* Sources */ = {
@@ -303,7 +500,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5765D2C52362C3890011881A /* MainController.swift in Sources */,
+				5764A61623674608002B6B38 /* Date+Format.swift in Sources */,
+				576597F82369DF0F00F67B67 /* ScanController.swift in Sources */,
+				57F55EA82369CCD700FD39C3 /* MainController.swift in Sources */,
+				576598022369F20800F67B67 /* DeviceCell.swift in Sources */,
+				5764A61323674362002B6B38 /* MDMessage.swift in Sources */,
+				5765D2C52362C3890011881A /* ChatController.swift in Sources */,
+				576597F42369DDDB00F67B67 /* TaskCell.swift in Sources */,
 				57C724E32366A5CA00DD1BB0 /* MessageCell.swift in Sources */,
 				5765D2C12362C3890011881A /* AppDelegate.swift in Sources */,
 				5765D2D92362C7970011881A /* SocketStream.swift in Sources */,
@@ -326,6 +529,7 @@
 /* Begin XCBuildConfiguration section */
 		573B23D823647C6400F3C3A0 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EFAA428EF7734D98F8819D30 /* Pods-SocketMessageServer.debug.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_STYLE = Automatic;
@@ -346,6 +550,7 @@
 		};
 		573B23D923647C6400F3C3A0 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = BBBF544ED0E5F384FB555946 /* Pods-SocketMessageServer.release.xcconfig */;
 			buildSettings = {
 				CLANG_ENABLE_MODULES = NO;
 				CODE_SIGN_STYLE = Automatic;
@@ -479,6 +684,7 @@
 		};
 		5765D2D22362C38D0011881A /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 3F01BADE302EA000A54F3D49 /* Pods-SocketMessageClient.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -498,6 +704,7 @@
 		};
 		5765D2D32362C38D0011881A /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 537ABE0718D07C1A27CF9A4C /* Pods-SocketMessageClient.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

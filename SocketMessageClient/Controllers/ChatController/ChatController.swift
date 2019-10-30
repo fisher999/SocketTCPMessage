@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainController: UIViewController {
+class ChatController: UIViewController {
     //MARK: View
     @IBOutlet weak fileprivate var textField: UITextField!
     @IBOutlet weak fileprivate var tableView: UITableView!
@@ -18,12 +18,14 @@ class MainController: UIViewController {
     
     //MARK: Model
     private var text: String?
-    private var messages: [String] = []
+    private var messages: [MDMessage] = []
         
     //MARK: Init
-    init(withHost host: String, port: Int) {
+    init(withHost host: String = "127.0.0.1", port: Int) {
         self.socketStream = SocketStream(withHost: host, port: port)
         super.init(nibName: nil, bundle: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(sender:)), name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -50,21 +52,22 @@ class MainController: UIViewController {
         self.tableView.dataSource = self
         self.tableView.separatorStyle = .none
     }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
 }
 
 //MARK: -SocketStreamDelegate
-extension MainController: SocketStreamDelegate {
-    func socketStream(_ socketStream: SocketStream, didSendMessage message: String) {
-        self.addNewMessage(message)
-    }
-    
+extension ChatController: SocketStreamDelegate {
     func socketStream(_ socketStream: SocketStream, receivedMessage message: String) {
         self.receiveMessage(message)
     }
 }
 
 //MARK: -UITableViewDataSource
-extension MainController: UITableViewDataSource {
+extension ChatController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return messages.count
     }
@@ -77,18 +80,30 @@ extension MainController: UITableViewDataSource {
 }
 
 //MARK: -Actions
-extension MainController {
+extension ChatController {
     @IBAction private func textFieldValueChanged(_ sender: UITextField) {
         self.text = sender.text
-        sender.text = nil
     }
     
     @IBAction private func sendButtonDidTapped(_ sender: UITextField) {
         sendMessage(self.text)
+        self.textField.text = nil
+    }
+    
+    @objc private func keyboardWillShow(sender: NSNotification) {
+        if let keyboardSize = (sender.userInfo?[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue {
+            if self.view.frame.origin.y == 0 {
+                self.view.frame.origin.y -= keyboardSize.height
+            }
+        }
+    }
+    
+    @objc private func keyboardWillHide(sender: NSNotification) {
+        self.view.frame.origin.y = 0
     }
 }
 
-extension MainController: UITextFieldDelegate {
+extension ChatController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         textField.resignFirstResponder()
         return true
@@ -96,17 +111,19 @@ extension MainController: UITextFieldDelegate {
 }
 
 //MARK: -BussinesLogic
-private extension MainController {
+private extension ChatController {
     func sendMessage(_ message: String?) {
         guard let message = message else {return}
         self.socketStream.sendMessage(message)
+        self.addNewMessage(message, type: .incoming)
     }
     
     func receiveMessage(_ message: String) {
-        addNewMessage(message)
+        addNewMessage(message, type: .outcoming)
     }
     
-    func addNewMessage(_ message: String) {
+    func addNewMessage(_ message: String, type: MDMessage.MessageType) {
+        let message = MDMessage(message: message, date: Date(), type: type)
         self.messages.append(message)
         insertRows()
     }
@@ -116,6 +133,7 @@ private extension MainController {
         self.tableView.beginUpdates()
         self.tableView.insertRows(at: [indexPath], with: .bottom)
         self.tableView.endUpdates()
+        self.tableView.scrollToRow(at: indexPath, at: .bottom, animated: true)
     }
 }
 

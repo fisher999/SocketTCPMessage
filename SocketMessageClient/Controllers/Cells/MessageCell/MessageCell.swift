@@ -14,10 +14,25 @@ class MessageCell: UITableViewCell {
     }
     
     @IBOutlet weak fileprivate var messageLabel: UILabel!
+    @IBOutlet weak fileprivate var dateLabel: UILabel!
     
-    var model: String? {
+    var model: MDMessage? {
         didSet {
-            self.messageLabel.text = model
+            setupModel(model)
         }
+    }
+    
+    private func setupModel(_ model: MDMessage?) {
+        guard let model = model else {return}
+        self.messageLabel.text = model.message
+        switch model.type {
+        case .incoming:
+            self.messageLabel.textAlignment = .right
+            self.dateLabel.textAlignment = .right
+        case .outcoming:
+            self.messageLabel.textAlignment = .left
+            self.dateLabel.textAlignment = .left
+        }
+        self.dateLabel.text = model.date.getTimeString(withFormat: "hh:mm:ss dd.MM.YY")
     }
 }
