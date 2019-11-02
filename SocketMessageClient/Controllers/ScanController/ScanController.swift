@@ -22,10 +22,10 @@ class ScanController: UIViewController {
     @IBOutlet fileprivate weak var sendMessagesButton: UIButton!
     
     //MARK: Service
-    private let lanScanner: MMLANScanner = MMLANScanner()
+    lazy private var lanScanner: MMLANScanner = MMLANScanner(delegate: self)
     
     //MARK: Model
-    private var devices: [MMDevice] = []
+    private var devices: [MDDevice] = []
     private var state: State = .default
         
     //MARK: Life cycle
@@ -45,8 +45,8 @@ class ScanController: UIViewController {
         self.tableView.register(nib, forCellReuseIdentifier: DeviceCell.id)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.separatorStyle = .none
         
-        lanScanner.delegate = self
         showProgress(false)
         setupRefresh()
     }
@@ -67,8 +67,7 @@ extension ScanController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DeviceCell.id) as! DeviceCell
-        let device = self.devices[indexPath.row]
-        cell.model = DeviceCell.Model(ip: device.ipAddress, port: device.hostname, computerName: device.brand)
+        cell.model = self.devices[indexPath.row]
         return cell
     }
 }
@@ -104,7 +103,7 @@ private extension ScanController {
 extension ScanController: MMLANScannerDelegate {
     //MARK: MMLanScannerDelegate
     func lanScanDidFindNewDevice(_ device: MMDevice!) {
-        self.addNewDevice(device)
+        
     }
     
     func lanScanDidFinishScanning(with status: MMLanScannerStatus) {
@@ -153,7 +152,8 @@ extension ScanController: MMLANScannerDelegate {
         self.progressView.isHidden = !show
     }
     
-    private func addNewDevice(_ device: MMDevice) {
+    private func addNewDevice(_ device: MDDevice) {
+        guard !devices.contains(device) else {return}
         devices.append(device)
         let indexPath = IndexPath(row: devices.count - 1, section: 0)
         tableView.beginUpdates()

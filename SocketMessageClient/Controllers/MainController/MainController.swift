@@ -43,7 +43,7 @@ private extension MainController {
                 self?.pushChatController()
                 return
             }
-            let chatController = ChatController(port: port)
+            let chatController = ChatController(chatType: .default(port: port))
             self?.navigationController?.pushViewController(chatController, animated: true)
         }
     }

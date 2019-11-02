@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <device id="retina4_7" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
@@ -18,18 +18,18 @@
         </placeholder>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view clearsContextBeforeDrawing="NO" contentMode="scaleToFill" id="i5M-Pr-FkT">
-            <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+            <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0y6-fB-bwl">
-                    <rect key="frame" x="0.0" y="46" width="414" height="746"/>
+                    <rect key="frame" x="0.0" y="2" width="375" height="563"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                 </tableView>
                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="y78-GK-UCq">
-                    <rect key="frame" x="0.0" y="44" width="414" height="2"/>
+                    <rect key="frame" x="0.0" y="0.0" width="375" height="2"/>
                 </progressView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="70O-96-YBF">
-                    <rect key="frame" x="30" y="812" width="354" height="50"/>
+                    <rect key="frame" x="30" y="585" width="315" height="50"/>
                     <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="3Uc-OX-zd8"/>
@@ -47,7 +47,7 @@
                 <constraint firstItem="y78-GK-UCq" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="RNj-Zw-Tup"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="70O-96-YBF" secondAttribute="trailing" constant="30" id="SUf-sU-ldK"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="0y6-fB-bwl" secondAttribute="trailing" id="X2h-va-cH5"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="70O-96-YBF" secondAttribute="bottom" id="aSE-PL-1xU"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="70O-96-YBF" secondAttribute="bottom" constant="32" id="aSE-PL-1xU"/>
                 <constraint firstItem="y78-GK-UCq" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="aZj-JN-ZCK"/>
                 <constraint firstItem="70O-96-YBF" firstAttribute="top" secondItem="0y6-fB-bwl" secondAttribute="bottom" constant="20" id="reD-8k-Vei"/>
                 <constraint firstItem="70O-96-YBF" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="rqb-Y9-ZRa"/>

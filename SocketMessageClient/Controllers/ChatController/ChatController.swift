@@ -9,20 +9,32 @@
 import UIKit
 
 class ChatController: UIViewController {
+    enum ChatType {
+        case `default`(port: Int)
+        case socketStream(socketStream: SMTCPSocketStreams)
+    }
+    
     //MARK: View
     @IBOutlet weak fileprivate var textField: UITextField!
     @IBOutlet weak fileprivate var tableView: UITableView!
     
     //MARK: Services
-    private let socketStream: SocketStream
+    private let socketStream: SMTCPSocketStreams
     
     //MARK: Model
     private var text: String?
     private var messages: [MDMessage] = []
-        
+    private var chatType: ChatType
+    
     //MARK: Init
-    init(withHost host: String = "127.0.0.1", port: Int) {
-        self.socketStream = SocketStream(withHost: host, port: port)
+    init(chatType: ChatType) {
+        self.chatType = chatType
+        switch chatType {
+        case .socketStream(let socketStream):
+            self.socketStream = socketStream
+        case .default:
+            self.socketStream = SMTCPSocketStreams()
+        }
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name: UIResponder.keyboardWillShowNotification, object: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide(sender:)), name: UIResponder.keyboardWillHideNotification, object: nil)
@@ -39,11 +51,19 @@ class ChatController: UIViewController {
     }
     
     private func setup() {
-        self.socketStream.connect()
-        self.socketStream.delegate = self
+        connect()
+        self.socketStream.delegate.add(self)
         self.textField.delegate = self
-        
         self.setupTable()
+    }
+    
+    private func connect() {
+        switch self.chatType{
+        case .socketStream:
+            return
+        case .default(let port):
+            socketStream.connect(withIp: "127.0.0.1", andPort: UInt32(port))
+        }
     }
     
     private func setupTable() {
@@ -60,8 +80,8 @@ class ChatController: UIViewController {
 }
 
 //MARK: -SocketStreamDelegate
-extension ChatController: SocketStreamDelegate {
-    func socketStream(_ socketStream: SocketStream, receivedMessage message: String) {
+extension ChatController: SMTCPSocketStreamsDelegate {
+    func smtcpSocketStreams(_ socketStreams: SMTCPSocketStreams!, didReceivedMessage message: String!) {
         self.receiveMessage(message)
     }
 }
@@ -114,7 +134,7 @@ extension ChatController: UITextFieldDelegate {
 private extension ChatController {
     func sendMessage(_ message: String?) {
         guard let message = message else {return}
-        self.socketStream.sendMessage(message)
+        self.socketStream.writeMessage(message)
         self.addNewMessage(message, type: .incoming)
     }
     

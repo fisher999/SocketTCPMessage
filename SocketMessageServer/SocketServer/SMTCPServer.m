@@ -90,7 +90,6 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
         CFSocketNativeHandle nativeSocketHandle = *(CFSocketNativeHandle *)data;
         SMTCPSocketStreams *socketStreams = [[SMTCPSocketStreams alloc] init];
         SMTCPServer *pointerToSelf = (__bridge SMTCPServer *)(info);
-        NSLog(@"%@", pointerToSelf);
         [socketStreams.delegate addDelegate:pointerToSelf];
         [socketStreams handleSocketEventsWithNativeHandle:nativeSocketHandle];
     }

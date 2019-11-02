@@ -28,10 +28,27 @@
     return self;
 }
 
+- (void)connectWithIp:(NSString *)ip andPort:(UInt32)port {
+    CFReadStreamRef readStream;
+    CFWriteStreamRef writeStream;
+    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef)ip, (UInt32)port, &readStream, &writeStream);
+    _inputStream = (__bridge_transfer NSInputStream *)readStream;
+    _outputStream = (__bridge_transfer NSOutputStream *)writeStream;
+    _inputStream.delegate = self;
+   [_inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [_outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [_inputStream open];
+    [_outputStream open];
+    CFRelease(readStream);
+    CFRelease(writeStream);
+}
+
 - (void)handleSocketEventsWithNativeHandle:(CFSocketNativeHandle) handle {
     CFReadStreamRef readStream;
     CFWriteStreamRef writeStream;
     CFStreamCreatePairWithSocket(kCFAllocatorDefault, handle, &readStream, &writeStream);
+    CFRetain(readStream);
+    CFRetain(writeStream);
     if (readStream && writeStream) {
         CFReadStreamSetProperty(readStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
         CFWriteStreamSetProperty(writeStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
@@ -42,12 +59,12 @@
         [_inputStream open];
         [_outputStream open];
         _inputStream.delegate = self;
-        CFRelease(readStream);
-        CFRelease(writeStream);
-        CFRunLoopRun();
+        _isConnected = YES;
     } else {
         close(handle);
     }
+    CFRelease(readStream);
+    CFRelease(writeStream);
 }
 
 - (void)writeMessage:(NSString *)message {
@@ -82,17 +99,11 @@
 - (void)close {
     [_inputStream close];
     [_outputStream close];
-    CFRunLoopStop(CFRunLoopGetCurrent());
+    _isConnected = NO;
 }
 
 - (void)dealloc {
     [self close];
-}
-
-#pragma mark: -SMTCPSocketServerDelegate
-
-- (void)SMTCPServer:(SMTCPServer *)server didSendMessage:(NSString *)message {
-    [self writeMessage:message];
 }
 
 @end

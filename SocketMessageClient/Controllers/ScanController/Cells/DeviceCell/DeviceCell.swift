@@ -13,23 +13,17 @@ class DeviceCell: UITableViewCell {
     static var id: String {
         return "DeviceCell"
     }
-    
-    struct Model {
-        let ip: String
-        let port: String
-        let computerName: String
-    }
-    
+        
     @IBOutlet fileprivate weak var deviceLabel: UILabel!
     
     
-    var model: Model? {
+    var model: MDDevice? {
         didSet {
             setup(model: model)
         }
     }
     
-    private func setup(model: Model?) {
+    private func setup(model: MDDevice?) {
         guard let model = model else {return}
         self.deviceLabel.text = "\(model.ip):\(model.port):\(model.computerName)"
     }

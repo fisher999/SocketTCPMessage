@@ -15,10 +15,12 @@
 - (void)SMTCPSocketStreams: (SMTCPSocketStreams *) socketStreams didReceivedMessage: (NSString *) message;
 @end
 
-@interface SMTCPSocketStreams : NSThread
+@interface SMTCPSocketStreams : NSObject
 
 @property (strong, nonatomic) SMTCPMulticastDelegate<SMTCPSocketStreamsDelegate> *delegate;
+@property (assign, readonly, nonatomic) bool isConnected;
 
+- (void)connectWithIp:(NSString *) ip andPort: (UInt32) port;
 - (void)handleSocketEventsWithNativeHandle:(CFSocketNativeHandle) handle;
 - (void)writeMessage: (NSString *) message;
 - (void)close;
