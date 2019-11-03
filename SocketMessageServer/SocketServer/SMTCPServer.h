@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "SMTCPSocketStreams.h"
 
-@interface SMTCPServer: NSThread
+@interface SMTCPServer: NSObject
 
 - (bool)bindWithPort: (NSInteger) port;
 - (bool)bindWithIntervalFromFirstPort: (NSInteger) firstPort toEndPort: (NSInteger) endPort;

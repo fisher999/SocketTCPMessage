@@ -32,8 +32,8 @@ class ChatController: UIViewController {
         switch chatType {
         case .socketStream(let socketStream):
             self.socketStream = socketStream
-        case .default:
-            self.socketStream = SMTCPSocketStreams()
+        case .default(let port):
+            self.socketStream = SMTCPSocketStreams(ip: "127.0.0.1", andPort: port)
         }
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -52,7 +52,7 @@ class ChatController: UIViewController {
     
     private func setup() {
         connect()
-        self.socketStream.delegate.add(self)
+        self.socketStream.delegate = self
         self.textField.delegate = self
         self.setupTable()
     }
@@ -61,8 +61,9 @@ class ChatController: UIViewController {
         switch self.chatType{
         case .socketStream:
             return
-        case .default(let port):
-            socketStream.connect(withIp: "127.0.0.1", andPort: UInt32(port))
+        case .default:
+            socketStream.connect()
+            socketStream.start()
         }
     }
     
@@ -81,8 +82,10 @@ class ChatController: UIViewController {
 
 //MARK: -SocketStreamDelegate
 extension ChatController: SMTCPSocketStreamsDelegate {
-    func smtcpSocketStreams(_ socketStreams: SMTCPSocketStreams!, didReceivedMessage message: String!) {
-        self.receiveMessage(message)
+    func smtcpSocketStreams(_ socketStreams: SMTCPSocketStreams!, didReceivedMessage message: String!, atIp ip: String!, atPort port: Int) {
+        DispatchQueue.main.async {
+            self.receiveMessage(message)
+        }
     }
 }
 
@@ -145,7 +148,7 @@ private extension ChatController {
     func addNewMessage(_ message: String, type: MDMessage.MessageType) {
         let message = MDMessage(message: message, date: Date(), type: type)
         self.messages.append(message)
-        insertRows()
+        self.insertRows()
     }
     
     func insertRows() {

@@ -90,8 +90,9 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
         CFSocketNativeHandle nativeSocketHandle = *(CFSocketNativeHandle *)data;
         SMTCPSocketStreams *socketStreams = [[SMTCPSocketStreams alloc] init];
         SMTCPServer *pointerToSelf = (__bridge SMTCPServer *)(info);
-        [socketStreams.delegate addDelegate:pointerToSelf];
+        socketStreams.delegate = pointerToSelf;
         [socketStreams handleSocketEventsWithNativeHandle:nativeSocketHandle];
+        [socketStreams start];
     }
 }
 
@@ -106,8 +107,7 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 }
 
 #pragma mark: SMTCPSocketStreamsDelegate
-
-- (void)SMTCPSocketStreams:(SMTCPSocketStreams *)socketStreams didReceivedMessage:(NSString *)message {
+- (void)SMTCPSocketStreams:(SMTCPSocketStreams *)socketStreams didReceivedMessage:(NSString *)message atIp:(NSString *)ip atPort:(NSInteger)port {
     if ([message isEqualToString:@"Do you understand me?"]) {
         [self sendMessage:@"Yes, I do!" toSocketStreams:socketStreams];
     }

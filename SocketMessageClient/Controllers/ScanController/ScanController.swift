@@ -159,5 +159,9 @@ extension ScanController: MMLANScannerDelegate {
         tableView.beginUpdates()
         tableView.insertRows(at: [indexPath], with: .bottom)
         tableView.endUpdates()
+        
     }
 }
+
+//MARK: -SocketConnect
+

@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 #import "SMTCPSocketStreams.h"
 #import "SMTCPServer.h"
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
 
 @interface SMTCPSocketStreams () <NSStreamDelegate>
 @end
@@ -16,67 +19,88 @@
 @implementation SMTCPSocketStreams {
     __strong NSInputStream *_inputStream;
     __strong NSOutputStream *_outputStream;
-    NSUInteger currentOffset;
+    NSUInteger _currentOffset;
 }
 
-- (instancetype)init
-{
-    self = [super init];
-    if (self) {
-        self.delegate = [[SMTCPMulticastDelegate alloc] init];
+- (instancetype)initWithIp:(NSString *)ip andPort:(NSInteger)port {
+    if (self = [super init]) {
+        _ip = ip;
+        _port = port;
     }
     return self;
 }
 
-- (void)connectWithIp:(NSString *)ip andPort:(UInt32)port {
+- (void)connect {
     CFReadStreamRef readStream;
     CFWriteStreamRef writeStream;
-    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef)ip, (UInt32)port, &readStream, &writeStream);
+    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef)_ip, (UInt32)_port, &readStream, &writeStream);
+    CFRetain(readStream);
+    CFRetain(writeStream);
     _inputStream = (__bridge_transfer NSInputStream *)readStream;
     _outputStream = (__bridge_transfer NSOutputStream *)writeStream;
-    _inputStream.delegate = self;
-   [_inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [_outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [_inputStream open];
-    [_outputStream open];
     CFRelease(readStream);
     CFRelease(writeStream);
 }
 
+- (void)main {
+    if (!(_inputStream && _outputStream)) {
+        return;
+    }
+    [_inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [_outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+    [_inputStream open];
+    [_outputStream open];
+    _inputStream.delegate = self;
+    _isConnected = YES;
+    CFRunLoopRun();
+}
+
 - (void)handleSocketEventsWithNativeHandle:(CFSocketNativeHandle) handle {
+    [self setIpAndPortFromNativeSocketHandle:handle];
     CFReadStreamRef readStream;
     CFWriteStreamRef writeStream;
     CFStreamCreatePairWithSocket(kCFAllocatorDefault, handle, &readStream, &writeStream);
     CFRetain(readStream);
     CFRetain(writeStream);
-    if (readStream && writeStream) {
-        CFReadStreamSetProperty(readStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
-        CFWriteStreamSetProperty(writeStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
-        _inputStream = (__bridge_transfer NSInputStream *)readStream;
-        _outputStream = (__bridge_transfer NSOutputStream *)writeStream;
-        [_inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        [_outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-        [_inputStream open];
-        [_outputStream open];
-        _inputStream.delegate = self;
-        _isConnected = YES;
-    } else {
-        close(handle);
-    }
+    CFReadStreamSetProperty(readStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
+    CFWriteStreamSetProperty(writeStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
+    _inputStream = (__bridge_transfer NSInputStream *)readStream;
+    _outputStream = (__bridge_transfer NSOutputStream *)writeStream;
     CFRelease(readStream);
     CFRelease(writeStream);
+}
+
+- (void)setIpAndPortFromNativeSocketHandle: (CFSocketNativeHandle) nativeSocketHandle {
+    uint8_t name[SOCK_MAXADDRLEN];
+    socklen_t namelen = sizeof(name);
+    NSData *peer = nil;
+    if (0 == getpeername(nativeSocketHandle, (struct sockaddr *)name, &namelen)) {
+        peer = [NSData dataWithBytes:name length:namelen];
+    }
+    struct sockaddr_in *socketaddress = (struct sockaddr_in*)name;
+
+    // convert ip to string
+    char *ipstr = malloc(INET_ADDRSTRLEN);
+    struct in_addr *ipv4addr = &socketaddress->sin_addr;
+    ipstr = inet_ntoa(*ipv4addr);
+    
+    // convert port to int
+    int portNumber = socketaddress->sin_port;
+
+    _ip   = [NSString stringWithFormat:@"%s", ipstr];
+    _port = portNumber;
 }
 
 - (void)writeMessage:(NSString *)message {
     NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
     uint8_t *dataBytes = (uint8_t *)[messageData bytes];
-    dataBytes += currentOffset;
-    NSUInteger length = [messageData length] - currentOffset > 1024 ? 1024 : [messageData length] - currentOffset;
+    dataBytes += _currentOffset;
+    NSUInteger length = [messageData length] - _currentOffset > 1024 ? 1024 : [messageData length] - _currentOffset;
     NSUInteger sentLength = [_outputStream write: dataBytes maxLength: length];
     if (sentLength > 0) {
-        currentOffset += sentLength;
-        if (currentOffset == [messageData length]) {
-            currentOffset = 0;
+        _currentOffset += sentLength;
+        if (_currentOffset == [messageData length]) {
+            _currentOffset = 0;
         }
     }
 }
@@ -100,6 +124,7 @@
     [_inputStream close];
     [_outputStream close];
     _isConnected = NO;
+    CFRunLoopStop(CFRunLoopGetCurrent());
 }
 
 - (void)dealloc {
@@ -116,7 +141,7 @@
         case NSStreamEventHasBytesAvailable:
             if ([aStream isKindOfClass:[NSInputStream class]]) {
                 NSString *message = [self readFromInputStream:(NSInputStream *) aStream];
-                [_delegate SMTCPSocketStreams:self didReceivedMessage:message];
+                [_delegate SMTCPSocketStreams:self didReceivedMessage:message atIp:_ip atPort:_port];
             }
             break;
         default:

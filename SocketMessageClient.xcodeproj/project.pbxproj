@@ -23,6 +23,7 @@
 		5765D2CA2362C38D0011881A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5765D2C92362C38D0011881A /* Assets.xcassets */; };
 		5765D2CD2362C38D0011881A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 5765D2CB2362C38D0011881A /* LaunchScreen.storyboard */; };
 		5765D2D62362C6540011881A /* ChatController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5765D2D52362C6540011881A /* ChatController.xib */; };
+		577EBA67236D7C99005059FB /* GCDConcurrency.m in Sources */ = {isa = PBXBuildFile; fileRef = 577EBA66236D7C99005059FB /* GCDConcurrency.m */; };
 		577FF48B236B3AB60030058B /* MDDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577FF48A236B3AB60030058B /* MDDevice.swift */; };
 		577FF48F236B49BA0030058B /* SMTCPSocketStreams.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C724D92365812D00DD1BB0 /* SMTCPSocketStreams.m */; };
 		577FF490236B4A4F0030058B /* SMTCPMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C724DD2365998200DD1BB0 /* SMTCPMulticastDelegate.m */; };
@@ -32,6 +33,7 @@
 		57C724E42366A5CA00DD1BB0 /* MessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57C724E22366A5CA00DD1BB0 /* MessageCell.xib */; };
 		57F55EA82369CCD700FD39C3 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F55EA62369CCD700FD39C3 /* MainController.swift */; };
 		57F55EA92369CCD700FD39C3 /* MainController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57F55EA72369CCD700FD39C3 /* MainController.xib */; };
+		57FAD404236D807500ADE5F0 /* MultipleSocketConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FAD403236D807500ADE5F0 /* MultipleSocketConnect.swift */; };
 		E6D045DB02487CC68CA349AC /* Pods_SocketMessageServer.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D249B515A80257E03D433936 /* Pods_SocketMessageServer.framework */; };
 /* End PBXBuildFile section */
 
@@ -69,6 +71,8 @@
 		5765D2CC2362C38D0011881A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		5765D2CE2362C38D0011881A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		5765D2D52362C6540011881A /* ChatController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatController.xib; sourceTree = "<group>"; };
+		577EBA65236D7C75005059FB /* GCDConcurrency.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GCDConcurrency.h; sourceTree = "<group>"; };
+		577EBA66236D7C99005059FB /* GCDConcurrency.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GCDConcurrency.m; sourceTree = "<group>"; };
 		577FF48A236B3AB60030058B /* MDDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDDevice.swift; sourceTree = "<group>"; };
 		577FF48C236B3DC20030058B /* SocketMessageClient-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SocketMessageClient-Bridging-Header.h"; sourceTree = "<group>"; };
 		57C724D82365812100DD1BB0 /* SMTCPSocketStreams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMTCPSocketStreams.h; sourceTree = "<group>"; };
@@ -79,6 +83,7 @@
 		57C724E22366A5CA00DD1BB0 /* MessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MessageCell.xib; sourceTree = "<group>"; };
 		57F55EA62369CCD700FD39C3 /* MainController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainController.swift; sourceTree = "<group>"; };
 		57F55EA72369CCD700FD39C3 /* MainController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = MainController.xib; sourceTree = "<group>"; };
+		57FAD403236D807500ADE5F0 /* MultipleSocketConnect.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultipleSocketConnect.swift; sourceTree = "<group>"; };
 		79580C6EE4A06BDF00348616 /* Pods_SocketMessageClient.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SocketMessageClient.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		BBBF544ED0E5F384FB555946 /* Pods-SocketMessageServer.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketMessageServer.release.xcconfig"; path = "Target Support Files/Pods-SocketMessageServer/Pods-SocketMessageServer.release.xcconfig"; sourceTree = "<group>"; };
 		D249B515A80257E03D433936 /* Pods_SocketMessageServer.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SocketMessageServer.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -108,6 +113,7 @@
 		573B23D523647C6400F3C3A0 /* SocketMessageServer */ = {
 			isa = PBXGroup;
 			children = (
+				577EBA64236D7C51005059FB /* Multithreading */,
 				57C724DB2365993B00DD1BB0 /* MulticastDelegate */,
 				57C724D72365810C00DD1BB0 /* SocketHandler */,
 				573B23E023647D0600F3C3A0 /* SocketServer */,
@@ -202,9 +208,9 @@
 		5765D2BF2362C3890011881A /* SocketMessageClient */ = {
 			isa = PBXGroup;
 			children = (
+				57FAD402236D805700ADE5F0 /* New Group */,
 				5764A614236745FB002B6B38 /* Extensions */,
 				5764A61123674352002B6B38 /* Model */,
-				5765D2D72362C73A0011881A /* Service */,
 				5765D2D42362C6430011881A /* Controllers */,
 				5765D2C02362C3890011881A /* AppDelegate.swift */,
 				5765D2C92362C38D0011881A /* Assets.xcassets */,
@@ -225,11 +231,13 @@
 			path = Controllers;
 			sourceTree = "<group>";
 		};
-		5765D2D72362C73A0011881A /* Service */ = {
+		577EBA64236D7C51005059FB /* Multithreading */ = {
 			isa = PBXGroup;
 			children = (
+				577EBA65236D7C75005059FB /* GCDConcurrency.h */,
+				577EBA66236D7C99005059FB /* GCDConcurrency.m */,
 			);
-			path = Service;
+			path = Multithreading;
 			sourceTree = "<group>";
 		};
 		57C724D72365810C00DD1BB0 /* SocketHandler */ = {
@@ -284,6 +292,14 @@
 				57F55EA72369CCD700FD39C3 /* MainController.xib */,
 			);
 			path = MainController;
+			sourceTree = "<group>";
+		};
+		57FAD402236D805700ADE5F0 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+				57FAD403236D807500ADE5F0 /* MultipleSocketConnect.swift */,
+			);
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 		63B22298276CFA02ED9EE2E4 /* Pods */ = {
@@ -474,6 +490,7 @@
 				57C724DE2365998200DD1BB0 /* SMTCPMulticastDelegate.m in Sources */,
 				57C724DA2365812D00DD1BB0 /* SMTCPSocketStreams.m in Sources */,
 				573B23D723647C6400F3C3A0 /* main.m in Sources */,
+				577EBA67236D7C99005059FB /* GCDConcurrency.m in Sources */,
 				573B23DF23647D0300F3C3A0 /* SMTCPServer.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -490,6 +507,7 @@
 				577FF48B236B3AB60030058B /* MDDevice.swift in Sources */,
 				5765D2C52362C3890011881A /* ChatController.swift in Sources */,
 				576597F42369DDDB00F67B67 /* TaskCell.swift in Sources */,
+				57FAD404236D807500ADE5F0 /* MultipleSocketConnect.swift in Sources */,
 				57C724E32366A5CA00DD1BB0 /* MessageCell.swift in Sources */,
 				577FF48F236B49BA0030058B /* SMTCPSocketStreams.m in Sources */,
 				5765D2C12362C3890011881A /* AppDelegate.swift in Sources */,

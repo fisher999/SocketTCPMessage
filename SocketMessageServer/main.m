@@ -12,9 +12,10 @@
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         SMTCPServer *server = [[SMTCPServer alloc] init];
-        [server bindWithPort:2000];
-        [server listen];
-        [[NSRunLoop currentRunLoop] run];
+        if ([server bindWithIntervalFromFirstPort: (NSInteger) 2000 toEndPort: (NSInteger) 2046]) {
+            [server listen];
+            [[NSRunLoop currentRunLoop] run];
+        }
     }
     return 0;
 }
