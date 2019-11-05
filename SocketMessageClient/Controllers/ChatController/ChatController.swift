@@ -25,6 +25,11 @@ class ChatController: UIViewController {
     private var text: String?
     private var messages: [MDMessage] = []
     private var chatType: ChatType
+    private var sortedMessages: [MDMessage] {
+        return messages.sorted { (messageA, messageB) -> Bool in
+            return messageA.date < messageB.date
+        }
+    }
     
     //MARK: Init
     init(chatType: ChatType) {
@@ -63,7 +68,6 @@ class ChatController: UIViewController {
             return
         case .default:
             socketStream.connect()
-            socketStream.start()
         }
     }
     
@@ -97,7 +101,7 @@ extension ChatController: UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let messageCell: MessageCell = tableView.dequeueReusableCell(withIdentifier: String(describing: MessageCell.self)) as! MessageCell
-        messageCell.model = messages[indexPath.row]
+        messageCell.model = sortedMessages[indexPath.row]
         return messageCell
     }
 }

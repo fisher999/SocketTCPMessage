@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		34B9AD229AE4171CE8360A84 /* Pods_SocketMessageClient.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 79580C6EE4A06BDF00348616 /* Pods_SocketMessageClient.framework */; };
+		571F4423236F546D009482E3 /* LANDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 571F4422236F546D009482E3 /* LANDevice.swift */; };
 		573B23D723647C6400F3C3A0 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B23D623647C6400F3C3A0 /* main.m */; };
 		573B23DF23647D0300F3C3A0 /* SMTCPServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 573B23DE23647D0300F3C3A0 /* SMTCPServer.m */; };
 		5764A61323674362002B6B38 /* MDMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5764A61223674362002B6B38 /* MDMessage.swift */; };
@@ -31,6 +32,7 @@
 		57C724DE2365998200DD1BB0 /* SMTCPMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C724DD2365998200DD1BB0 /* SMTCPMulticastDelegate.m */; };
 		57C724E32366A5CA00DD1BB0 /* MessageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57C724E12366A5CA00DD1BB0 /* MessageCell.swift */; };
 		57C724E42366A5CA00DD1BB0 /* MessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57C724E22366A5CA00DD1BB0 /* MessageCell.xib */; };
+		57F10AB1236FFCB900266916 /* GCDConcurrency.m in Sources */ = {isa = PBXBuildFile; fileRef = 577EBA66236D7C99005059FB /* GCDConcurrency.m */; };
 		57F55EA82369CCD700FD39C3 /* MainController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57F55EA62369CCD700FD39C3 /* MainController.swift */; };
 		57F55EA92369CCD700FD39C3 /* MainController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 57F55EA72369CCD700FD39C3 /* MainController.xib */; };
 		57FAD404236D807500ADE5F0 /* MultipleSocketConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 57FAD403236D807500ADE5F0 /* MultipleSocketConnect.swift */; };
@@ -52,6 +54,7 @@
 /* Begin PBXFileReference section */
 		3F01BADE302EA000A54F3D49 /* Pods-SocketMessageClient.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketMessageClient.debug.xcconfig"; path = "Target Support Files/Pods-SocketMessageClient/Pods-SocketMessageClient.debug.xcconfig"; sourceTree = "<group>"; };
 		537ABE0718D07C1A27CF9A4C /* Pods-SocketMessageClient.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SocketMessageClient.release.xcconfig"; path = "Target Support Files/Pods-SocketMessageClient/Pods-SocketMessageClient.release.xcconfig"; sourceTree = "<group>"; };
+		571F4422236F546D009482E3 /* LANDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LANDevice.swift; sourceTree = "<group>"; };
 		573B23D423647C6400F3C3A0 /* SocketMessageServer */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = SocketMessageServer; sourceTree = BUILT_PRODUCTS_DIR; };
 		573B23D623647C6400F3C3A0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		573B23DE23647D0300F3C3A0 /* SMTCPServer.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SMTCPServer.m; sourceTree = "<group>"; };
@@ -140,12 +143,13 @@
 			path = Model;
 			sourceTree = "<group>";
 		};
-		5764A614236745FB002B6B38 /* Extensions */ = {
+		5764A614236745FB002B6B38 /* ExtensionsUtils */ = {
 			isa = PBXGroup;
 			children = (
 				5764A61523674608002B6B38 /* Date+Format.swift */,
+				571F4422236F546D009482E3 /* LANDevice.swift */,
 			);
-			path = Extensions;
+			path = ExtensionsUtils;
 			sourceTree = "<group>";
 		};
 		576597EE2369DD8700F67B67 /* ScanController */ = {
@@ -209,7 +213,7 @@
 			isa = PBXGroup;
 			children = (
 				57FAD402236D805700ADE5F0 /* New Group */,
-				5764A614236745FB002B6B38 /* Extensions */,
+				5764A614236745FB002B6B38 /* ExtensionsUtils */,
 				5764A61123674352002B6B38 /* Model */,
 				5765D2D42362C6430011881A /* Controllers */,
 				5765D2C02362C3890011881A /* AppDelegate.swift */,
@@ -502,12 +506,14 @@
 				5764A61623674608002B6B38 /* Date+Format.swift in Sources */,
 				576597F82369DF0F00F67B67 /* ScanController.swift in Sources */,
 				57F55EA82369CCD700FD39C3 /* MainController.swift in Sources */,
+				57F10AB1236FFCB900266916 /* GCDConcurrency.m in Sources */,
 				576598022369F20800F67B67 /* DeviceCell.swift in Sources */,
 				5764A61323674362002B6B38 /* MDMessage.swift in Sources */,
 				577FF48B236B3AB60030058B /* MDDevice.swift in Sources */,
 				5765D2C52362C3890011881A /* ChatController.swift in Sources */,
 				576597F42369DDDB00F67B67 /* TaskCell.swift in Sources */,
 				57FAD404236D807500ADE5F0 /* MultipleSocketConnect.swift in Sources */,
+				571F4423236F546D009482E3 /* LANDevice.swift in Sources */,
 				57C724E32366A5CA00DD1BB0 /* MessageCell.swift in Sources */,
 				577FF48F236B49BA0030058B /* SMTCPSocketStreams.m in Sources */,
 				5765D2C12362C3890011881A /* AppDelegate.swift in Sources */,

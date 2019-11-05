@@ -11,7 +11,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="ScanController" customModule="SocketMessageClient" customModuleProvider="target">
             <connections>
                 <outlet property="progressView" destination="y78-GK-UCq" id="GoZ-nw-AkH"/>
-                <outlet property="sendMessagesButton" destination="70O-96-YBF" id="yjP-re-Dd6"/>
+                <outlet property="segmentedControl" destination="8is-hz-crg" id="m8B-4D-EDn"/>
                 <outlet property="tableView" destination="0y6-fB-bwl" id="PCm-0T-HlM"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
             </connections>
@@ -22,38 +22,34 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="0y6-fB-bwl">
-                    <rect key="frame" x="0.0" y="2" width="375" height="563"/>
+                    <rect key="frame" x="0.0" y="55" width="375" height="612"/>
                     <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                 </tableView>
                 <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" progress="0.5" translatesAutoresizingMaskIntoConstraints="NO" id="y78-GK-UCq">
                     <rect key="frame" x="0.0" y="0.0" width="375" height="2"/>
                 </progressView>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="70O-96-YBF">
-                    <rect key="frame" x="30" y="585" width="315" height="50"/>
-                    <color key="backgroundColor" systemColor="systemTealColor" red="0.35294117650000001" green="0.7843137255" blue="0.98039215690000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    <constraints>
-                        <constraint firstAttribute="height" constant="50" id="3Uc-OX-zd8"/>
-                    </constraints>
-                    <state key="normal" title="Send messages">
-                        <color key="titleColor" systemColor="secondarySystemBackgroundColor" red="0.94901960780000005" green="0.94901960780000005" blue="0.96862745100000003" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                    </state>
-                </button>
+                <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="8is-hz-crg">
+                    <rect key="frame" x="79" y="10" width="217" height="32"/>
+                    <segments>
+                        <segment title="All devices"/>
+                        <segment title="Active devices"/>
+                    </segments>
+                </segmentedControl>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstAttribute="trailing" secondItem="y78-GK-UCq" secondAttribute="trailing" id="0bs-iw-e1D"/>
+                <constraint firstItem="0y6-fB-bwl" firstAttribute="top" secondItem="8is-hz-crg" secondAttribute="bottom" constant="14" id="7dq-Ru-vsA"/>
                 <constraint firstItem="0y6-fB-bwl" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" id="B6f-Fe-wxr"/>
-                <constraint firstItem="0y6-fB-bwl" firstAttribute="top" secondItem="y78-GK-UCq" secondAttribute="bottom" id="GkZ-BJ-en0"/>
                 <constraint firstItem="y78-GK-UCq" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" id="RNj-Zw-Tup"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="70O-96-YBF" secondAttribute="trailing" constant="30" id="SUf-sU-ldK"/>
+                <constraint firstItem="0y6-fB-bwl" firstAttribute="bottom" secondItem="fnl-2z-Ty3" secondAttribute="bottom" id="Tc9-rC-f6L"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="0y6-fB-bwl" secondAttribute="trailing" id="X2h-va-cH5"/>
-                <constraint firstItem="fnl-2z-Ty3" firstAttribute="bottom" secondItem="70O-96-YBF" secondAttribute="bottom" constant="32" id="aSE-PL-1xU"/>
                 <constraint firstItem="y78-GK-UCq" firstAttribute="leading" secondItem="i5M-Pr-FkT" secondAttribute="leading" id="aZj-JN-ZCK"/>
-                <constraint firstItem="70O-96-YBF" firstAttribute="top" secondItem="0y6-fB-bwl" secondAttribute="bottom" constant="20" id="reD-8k-Vei"/>
-                <constraint firstItem="70O-96-YBF" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="30" id="rqb-Y9-ZRa"/>
+                <constraint firstItem="8is-hz-crg" firstAttribute="top" secondItem="y78-GK-UCq" secondAttribute="bottom" constant="8" id="bOj-Sv-NXJ"/>
+                <constraint firstItem="8is-hz-crg" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="iZP-aJ-d9t"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
-            <point key="canvasLocation" x="137.68115942028987" y="144.64285714285714"/>
+            <point key="canvasLocation" x="136.80000000000001" y="144.3778110944528"/>
         </view>
     </objects>
 </document>

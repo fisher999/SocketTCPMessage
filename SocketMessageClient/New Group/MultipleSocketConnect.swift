@@ -9,9 +9,17 @@
 import Foundation
 import MMLanScan
 
+protocol MultipleSocketConnectDelegate: class {
+    func multipleSocketConnect(_ multipleSocketConnect: MultipleSocketConnect, didAppendNewActiveDevice device: MDDevice)
+}
+
 class MultipleSocketConnect {
-    private var socketStreams: [MMDevice: SMTCPSocketStreams] = [:]
-  
+    var socketDevices: [MDDevice: SMTCPSocketStreams] = [:]
+    private var allDevices: [LANDevice] = []
+    private var allStreams: [SMTCPSocketStreams] = []
+    
+    weak var delegate: MultipleSocketConnectDelegate?
+    
     private(set) var firstPort: Int
     private(set) var endPort: Int
     
@@ -21,18 +29,49 @@ class MultipleSocketConnect {
         self.endPort = endPort
     }
     
-    func addDevice(_ device: MMDevice) {
+    func connectTo(_ device: LANDevice) {
+        self.allDevices.append(device)
         for port in firstPort ... endPort {
             let socketStream = SMTCPSocketStreams(ip: device.ipAddress, andPort: port)
             socketStream?.delegate = self
             socketStream?.connect()
-            socketStream?.start()
+            if let stream = socketStream {
+                self.allStreams.append(stream)
+            }
         }
+        self.sendMessageToAll()
+    }
+    
+    private func sendMessageToAll() {
+        for stream in self.allStreams {
+            stream.writeMessage("Do you understand me?")
+        }
+    }
+    
+    func disconnect() {
+        for stream in self.allStreams {
+            stream.close()
+        }
+    }
+    
+    deinit {
+        disconnect()
+        self.allStreams = []
     }
 }
 
+//MARK: -SMTCPSocketStreamsDelegate
 extension MultipleSocketConnect: SMTCPSocketStreamsDelegate {
     func smtcpSocketStreams(_ socketStreams: SMTCPSocketStreams!, didReceivedMessage message: String!, atIp ip: String!, atPort port: Int) {
-        
+        self.proposeMessageFrom(socketStreams, message, atIp: ip, atPort: port)
+    }
+    
+    private func proposeMessageFrom(_ socketStreams: SMTCPSocketStreams, _ message: String!, atIp ip: String!, atPort port: Int) {
+        print("message: \(String(describing: message))")
+        for device in self.allDevices where device.ipAddress == ip {
+            let newDevice = MDDevice(ip: ip, type: .active(port: port), computerName: device.hostname)
+            self.socketDevices[newDevice] = socketStreams
+            self.delegate?.multipleSocketConnect(self, didAppendNewActiveDevice: newDevice)
+        }
     }
 }

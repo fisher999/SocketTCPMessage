@@ -16,17 +16,30 @@ class ScanController: UIViewController {
         case didScanned
     }
     
+    enum PageType: String {
+        case allDevices
+        case activeDevices
+    }
+    
     //MARK: Outlets
     @IBOutlet fileprivate weak var tableView: UITableView!
     @IBOutlet fileprivate weak var progressView: UIProgressView!
-    @IBOutlet fileprivate weak var sendMessagesButton: UIButton!
+    @IBOutlet fileprivate weak var segmentedControl: UISegmentedControl!
     
     //MARK: Service
     lazy private var lanScanner: MMLANScanner = MMLANScanner(delegate: self)
+    lazy private var multipleSocketConnect: MultipleSocketConnect = MultipleSocketConnect(firstPort: firstPort, endPort: lastPort)
     
     //MARK: Model
-    private var devices: [MDDevice] = []
+    private var currentPage: PageType = .allDevices {
+        didSet {
+            self.tableView.reloadData()
+        }
+    }
+    private var devices: [PageType: [MDDevice]] = [PageType.allDevices: [], PageType.activeDevices: []]
     private var state: State = .default
+    private var firstPort: Int = 2000
+    private var lastPort: Int = 2046
         
     //MARK: Life cycle
     override func viewDidLoad() {
@@ -47,8 +60,16 @@ class ScanController: UIViewController {
         tableView.dataSource = self
         tableView.separatorStyle = .none
         
+        multipleSocketConnect.delegate = self
+        
+        segmentedControl.addTarget(self, action: #selector(segmentedControlDidChangedValue(_:)), for: .valueChanged)
+        
         showProgress(false)
         setupRefresh()
+    }
+    
+    deinit {
+        self.stopScan()
     }
 }
 
@@ -62,12 +83,12 @@ extension ScanController: UITableViewDelegate {
 //MARK: -UITableViewDataSource
 extension ScanController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return devices.count
+        return self.devices[currentPage]!.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DeviceCell.id) as! DeviceCell
-        cell.model = self.devices[indexPath.row]
+        cell.model = self.devices[currentPage]![indexPath.row]
         return cell
     }
 }
@@ -97,13 +118,26 @@ private extension ScanController {
             return
         }
     }
+    
+    @objc func segmentedControlDidChangedValue(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            self.currentPage = .allDevices
+        case 1:
+            self.currentPage = .activeDevices
+        default:
+            return
+        }
+    }
 }
 
 //MARK: -Scanner
 extension ScanController: MMLANScannerDelegate {
     //MARK: MMLanScannerDelegate
     func lanScanDidFindNewDevice(_ device: MMDevice!) {
-        
+        let newDevice = MDDevice(ip: device.ipAddress, type: .notActive, computerName: device.hostname)
+        self.addNewDevice(newDevice, to: .allDevices)
+        multipleSocketConnect.connectTo(device)
     }
     
     func lanScanDidFinishScanning(with status: MMLanScannerStatus) {
@@ -127,8 +161,8 @@ extension ScanController: MMLANScannerDelegate {
     
     //MARK: Scanning
     private func startScan() {
+        self.lanScanner.stop()
         self.lanScanner.start()
-        self.state = .scanning
     }
     
     private func stopScan() {
@@ -138,7 +172,7 @@ extension ScanController: MMLANScannerDelegate {
     
     //MARK: Helping methods
     private func reload() {
-        self.devices = []
+        self.devices[currentPage] = []
         self.tableView.reloadData()
     }
     
@@ -152,16 +186,27 @@ extension ScanController: MMLANScannerDelegate {
         self.progressView.isHidden = !show
     }
     
-    private func addNewDevice(_ device: MDDevice) {
-        guard !devices.contains(device) else {return}
-        devices.append(device)
+    private func addNewDevice(_ device: MDDevice, to page: PageType) {
+        guard !(self.devices[page]?.contains(device) ?? false) else {return}
+        var pageDevices = self.devices[page] ?? []
+        pageDevices.append(device)
+        self.devices[page] = pageDevices
         let indexPath = IndexPath(row: devices.count - 1, section: 0)
-        tableView.beginUpdates()
-        tableView.insertRows(at: [indexPath], with: .bottom)
-        tableView.endUpdates()
+        if currentPage == page {
+            DispatchQueue.main.async {
+                self.tableView.beginUpdates()
+                self.tableView.insertRows(at: [indexPath], with: .bottom)
+                self.tableView.endUpdates()
+            }
+        }
         
     }
 }
 
-//MARK: -SocketConnect
+//MARK: -MultipleSocketConnectDelegate
+extension ScanController: MultipleSocketConnectDelegate {
+    func multipleSocketConnect(_ multipleSocketConnect: MultipleSocketConnect, didAppendNewActiveDevice device: MDDevice) {
+        self.addNewDevice(device, to: .activeDevices)
+    }
+}
 

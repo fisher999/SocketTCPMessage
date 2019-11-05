@@ -15,9 +15,9 @@
 - (void)SMTCPSocketStreams: (SMTCPSocketStreams *) socketStreams didReceivedMessage: (NSString *) message atIp: (NSString *)ip atPort: (NSInteger) port;
 @end
 
-@interface SMTCPSocketStreams : NSThread
+@interface SMTCPSocketStreams : NSObject
 
-@property (strong, nonatomic) id<SMTCPSocketStreamsDelegate> delegate;
+@property (weak, nonatomic) id<SMTCPSocketStreamsDelegate> delegate;
 @property (assign, readonly, nonatomic) bool isConnected;
 @property (assign, readonly, nonatomic) NSInteger port;
 @property (strong, readonly, nonatomic) NSString *ip;

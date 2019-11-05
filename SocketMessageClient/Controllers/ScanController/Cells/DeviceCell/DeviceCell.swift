@@ -25,6 +25,11 @@ class DeviceCell: UITableViewCell {
     
     private func setup(model: MDDevice?) {
         guard let model = model else {return}
-        self.deviceLabel.text = "\(model.ip):\(model.port):\(model.computerName)"
+        switch model.type {
+        case .notActive:
+            self.deviceLabel.text = "\(model.ip):\(model.computerName)"
+        case .active(let port):
+            self.deviceLabel.text = "\(model.ip):\(port):\(model.computerName)"
+        }
     }
 }

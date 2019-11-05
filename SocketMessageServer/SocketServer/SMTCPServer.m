@@ -13,13 +13,19 @@
 #include <Foundation/Foundation.h>
 #import "SMTCPSocketStreams.h"
 
-@interface SMTCPServer () <SMTCPSocketStreamsDelegate>
-@property (strong, nonatomic) SMTCPSocketStreams *socketStreams;
-@end
-
 @implementation SMTCPServer {
     CFSocketRef cfSocket;
 }
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _socketStreams = [[NSMutableArray alloc] init];
+    }
+    return self;
+}
+
 - (bool)bindWithPort: (NSInteger) port {
     CFSocketContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
     cfSocket = CFSocketCreate(
@@ -73,11 +79,11 @@
         kCFAllocatorDefault,
         cfSocket,
         0);
-    NSLog(@"%@", self);
     CFRunLoopAddSource(
         CFRunLoopGetCurrent(),
         socketsource,
         kCFRunLoopDefaultMode);
+    [[NSRunLoop currentRunLoop] run];
 }
 
 - (void)sendMessage:(NSString *)message toSocketStreams:(SMTCPSocketStreams *)socketStreams {
@@ -88,11 +94,11 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     NSLog(@"RECIEVED CONNECTION REQUEST \n");
     if (kCFSocketAcceptCallBack == type) {
         CFSocketNativeHandle nativeSocketHandle = *(CFSocketNativeHandle *)data;
-        SMTCPSocketStreams *socketStreams = [[SMTCPSocketStreams alloc] init];
+        SMTCPSocketStreams *socketStream = [[SMTCPSocketStreams alloc] init];
         SMTCPServer *pointerToSelf = (__bridge SMTCPServer *)(info);
-        socketStreams.delegate = pointerToSelf;
-        [socketStreams handleSocketEventsWithNativeHandle:nativeSocketHandle];
-        [socketStreams start];
+        [[pointerToSelf socketStreams] addObject:socketStream];
+        socketStream.delegate = pointerToSelf;
+        [socketStream handleSocketEventsWithNativeHandle:nativeSocketHandle];
     }
 }
 
@@ -108,6 +114,7 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
 
 #pragma mark: SMTCPSocketStreamsDelegate
 - (void)SMTCPSocketStreams:(SMTCPSocketStreams *)socketStreams didReceivedMessage:(NSString *)message atIp:(NSString *)ip atPort:(NSInteger)port {
+    NSLog(@"message: %@ from ip: %@ at port: %li", message, ip, port);
     if ([message isEqualToString:@"Do you understand me?"]) {
         [self sendMessage:@"Yes, I do!" toSocketStreams:socketStreams];
     }

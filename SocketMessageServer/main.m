@@ -14,7 +14,6 @@ int main(int argc, const char * argv[]) {
         SMTCPServer *server = [[SMTCPServer alloc] init];
         if ([server bindWithIntervalFromFirstPort: (NSInteger) 2000 toEndPort: (NSInteger) 2046]) {
             [server listen];
-            [[NSRunLoop currentRunLoop] run];
         }
     }
     return 0;

@@ -11,6 +11,8 @@
 
 @interface SMTCPServer: NSObject
 
+@property (strong, nonatomic) NSMutableArray<SMTCPSocketStreams *> *socketStreams;
+
 - (bool)bindWithPort: (NSInteger) port;
 - (bool)bindWithIntervalFromFirstPort: (NSInteger) firstPort toEndPort: (NSInteger) endPort;
 - (void)listen;
