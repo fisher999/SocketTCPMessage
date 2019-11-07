@@ -139,7 +139,7 @@ private extension ScanController {
 extension ScanController: MMLANScannerDelegate {
     //MARK: MMLanScannerDelegate
     func lanScanDidFindNewDevice(_ device: MMDevice!) {
-        serialQueue.async(flags: .barrier) {
+        DispatchQueue.main.async {
             self.lanDevices.append(device)
             let newDevice = MDDevice(ip: device.ipAddress, type: .notActive, computerName: device.hostname)
             self.addNewDevice(newDevice, to: .allDevices)
@@ -188,6 +188,7 @@ extension ScanController: MMLANScannerDelegate {
         for device in self.lanDevices {
             multipleSocketConnect.connectTo(device)
         }
+        self.stopScan()
     }
     
     private func showProgress(_ show: Bool) {
@@ -201,11 +202,9 @@ extension ScanController: MMLANScannerDelegate {
         self.devices[page] = pageDevices
         guard let count = self.devices[page]?.count, self.currentPage == page else {return}
         let indexPath = IndexPath(row: count - 1, section: 0)
-        DispatchQueue.main.async {
-            self.tableView.beginUpdates()
-            self.tableView.insertRows(at: [indexPath], with: .bottom)
-            self.tableView.endUpdates()
-        }
+        self.tableView.beginUpdates()
+        self.tableView.insertRows(at: [indexPath], with: .bottom)
+        self.tableView.endUpdates()
     }
 }
 

@@ -13,6 +13,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #import "GCDConcurrency.h"
+#import "GCDAsyncSocket.h"
 
 @interface SMTCPSocketStreams () <NSStreamDelegate>
 
@@ -45,7 +46,7 @@
 
 - (void)connect {
     __weak SMTCPSocketStreams *weakSelf = self;
-    _connectOperation = [NSBlockOperation blockOperationWithBlock:^{
+//    _connectOperation = [NSBlockOperation blockOperationWithBlock:^{
         CFReadStreamRef readStream;
         CFWriteStreamRef writeStream;
         CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef)weakSelf.ip, (UInt32)weakSelf.port, &readStream, &writeStream);
@@ -64,8 +65,9 @@
         [weakSelf.outputStream open];
         weakSelf.inputStream.delegate = self;
         [weakSelf setConnected: YES];
-    }];
-    [_operationQueue addOperation:_connectOperation];
+//    }];
+//    [s]
+//    [_operationQueue addOperation:_connectOperation];
 }
 
 -(void)setConnected: (bool) connected {
@@ -74,7 +76,7 @@
 
 - (void)handleSocketEventsWithNativeHandle:(CFSocketNativeHandle) handle {
     __weak SMTCPSocketStreams *weakSelf = self;
-    _connectOperation = [NSBlockOperation blockOperationWithBlock:^{
+//    _connectOperation = [NSBlockOperation blockOperationWithBlock:^{
         [weakSelf setIpAndPortFromNativeSocketHandle:handle];
         CFReadStreamRef readStream;
         CFWriteStreamRef writeStream;
@@ -96,8 +98,8 @@
         [weakSelf.outputStream open];
         weakSelf.inputStream.delegate = weakSelf;
         [weakSelf setConnected:YES];
-    }];
-    [_operationQueue addOperation:_connectOperation];
+//    }];
+//    [_operationQueue addOperation:_connectOperation];
 }
 
 - (void)setIpAndPortFromNativeSocketHandle: (CFSocketNativeHandle) nativeSocketHandle {
@@ -124,8 +126,7 @@
 
 - (void)writeMessage:(NSString *)message dispatchAfter:(NSTimeInterval)time {
     __weak SMTCPSocketStreams *weakSelf = self;
-    NSBlockOperation *writeOperation = [NSBlockOperation blockOperationWithBlock:^{
-        [NSThread sleepForTimeInterval:time];
+//    NSBlockOperation *writeOperation = [NSBlockOperation blockOperationWithBlock:^{
             NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
             uint8_t *dataBytes = (uint8_t *)[messageData bytes];
             dataBytes += [weakSelf currentOffset];
@@ -138,9 +139,9 @@
                     weakSelf.currentOffset = 0;
                 }
             }
-    }];
-    [writeOperation addDependency:_connectOperation];
-    [_operationQueue addOperation:writeOperation];
+//    }];
+//    [writeOperation addDependency:_connectOperation];
+//    [_operationQueue addOperation:writeOperation];
 }
 
 - (NSString *)readFromInputStream:(NSInputStream *) inputStream {
@@ -180,12 +181,12 @@
         case NSStreamEventHasBytesAvailable:
             if ([aStream isKindOfClass:[NSInputStream class]]) {
                 __weak SMTCPSocketStreams *weakSelf = self;
-                NSBlockOperation *readOperation = [NSBlockOperation blockOperationWithBlock:^{
+//                NSBlockOperation *readOperation = [NSBlockOperation blockOperationWithBlock:^{
                     NSString *message = [weakSelf readFromInputStream:(NSInputStream *) aStream];
                     [[weakSelf delegate] SMTCPSocketStreams:weakSelf didReceivedMessage:message atIp:[weakSelf ip] atPort:[weakSelf port]];
-                }];
-                [readOperation addDependency:_connectOperation];
-                [_operationQueue addOperation:readOperation];
+//                }];
+//                [readOperation start];
+                //[_operationQueue addOperation:readOperation];
             }
             break;
         default:

@@ -1,16 +1,20 @@
 PODS:
+  - CocoaAsyncSocket (7.6.3)
   - MMLanScan (3.0.0)
 
 DEPENDENCIES:
+  - CocoaAsyncSocket (= 7.6.3)
   - MMLanScan (= 3.0.0)
 
 SPEC REPOS:
   trunk:
+    - CocoaAsyncSocket
     - MMLanScan
 
 SPEC CHECKSUMS:
+  CocoaAsyncSocket: eafaa68a7e0ec99ead0a7b35015e0bf25d2c8987
   MMLanScan: 86a0f77edbf163be30c1f58321469c7c8ce4c50e
 
-PODFILE CHECKSUM: cd929af8f4d15d5f6a9beb83b2fce3d4f40734a1
+PODFILE CHECKSUM: e27a6bbf4caefb738ab24d2541c5147b5fde2651
 
 COCOAPODS: 1.8.4

@@ -143,6 +143,7 @@
     [self.queue cancelAllOperations];
     [self.queue waitUntilAllOperationsAreFinished];
     self.isScanning = NO;
+    
 }
 
 #pragma mark - NSOperationQueue Observer

@@ -17,6 +17,9 @@ class MultipleSocketConnect {
     var socketDevices: [MDDevice: SMTCPSocketStreams] = [:]
     private var allDevices: [LANDevice] = []
     private var allStreams: [SMTCPSocketStreams] = []
+    private let dispatchGroup: DispatchGroup = DispatchGroup()
+    private let semaphore: DispatchSemaphore = DispatchSemaphore(value: 2)
+    private let globalQueue: DispatchQueue = DispatchQueue.global()
     
     weak var delegate: MultipleSocketConnectDelegate?
     
@@ -30,16 +33,23 @@ class MultipleSocketConnect {
     }
     
     func connectTo(_ device: LANDevice) {
-        self.allDevices.append(device)
-        for port in firstPort ... endPort {
-            let socketStream = SMTCPSocketStreams(ip: device.ipAddress, andPort: port)
-            socketStream?.delegate = self
-            socketStream?.connect()
-            if let stream = socketStream {
-                self.allStreams.append(stream)
+        //guard let self = self else {return}
+            self.allDevices.append(device)
+            for port in self.firstPort ... self.endPort {
+                globalQueue.async { [weak self] in
+                    guard let self = self else {return}
+                    self.semaphore.wait()
+                    print("port: \(port)")
+                    defer {self.semaphore.signal()}
+                    let socketStream = SMTCPSocketStreams(ip: device.ipAddress, andPort: port)
+                    socketStream?.delegate = self
+                    socketStream?.connect()
+                    if let stream = socketStream {
+                        self.allStreams.append(stream)
+                    }
+                    socketStream?.writeMessage("Do you understand me?", dispatchAfter: 0)
+                }
             }
-            socketStream?.writeMessage("Do you understand me?", dispatchAfter: 0)
-        }
     }
     
     func disconnect() {
