@@ -141,7 +141,7 @@ extension ChatController: UITextFieldDelegate {
 private extension ChatController {
     func sendMessage(_ message: String?) {
         guard let message = message else {return}
-        self.socketStream.writeMessage(message)
+        self.socketStream.writeMessage(message, dispatchAfter: 0)
         self.addNewMessage(message, type: .incoming)
     }
     

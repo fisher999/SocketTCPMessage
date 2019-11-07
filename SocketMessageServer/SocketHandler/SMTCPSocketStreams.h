@@ -25,7 +25,7 @@
 - (instancetype)initWithIp: (NSString *) ip andPort: (NSInteger) port;
 - (void)connect;
 - (void)handleSocketEventsWithNativeHandle:(CFSocketNativeHandle) handle;
-- (void)writeMessage: (NSString *) message;
+- (void)writeMessage: (NSString *) message dispatchAfter: (NSTimeInterval) time;
 - (void)close;
 
 @end

@@ -25,6 +25,7 @@ class ScanController: UIViewController {
     @IBOutlet fileprivate weak var tableView: UITableView!
     @IBOutlet fileprivate weak var progressView: UIProgressView!
     @IBOutlet fileprivate weak var segmentedControl: UISegmentedControl!
+    private let serialQueue: DispatchQueue = DispatchQueue(label: "com.victor.socketmessageclient.scancontroller.serial")
     
     //MARK: Service
     lazy private var lanScanner: MMLANScanner = MMLANScanner(delegate: self)
@@ -36,7 +37,9 @@ class ScanController: UIViewController {
             self.tableView.reloadData()
         }
     }
+    
     private var devices: [PageType: [MDDevice]] = [PageType.allDevices: [], PageType.activeDevices: []]
+    private var lanDevices: [LANDevice] = []
     private var state: State = .default
     private var firstPort: Int = 2000
     private var lastPort: Int = 2046
@@ -70,6 +73,7 @@ class ScanController: UIViewController {
     
     deinit {
         self.stopScan()
+        self.multipleSocketConnect.disconnect()
     }
 }
 
@@ -135,9 +139,11 @@ private extension ScanController {
 extension ScanController: MMLANScannerDelegate {
     //MARK: MMLanScannerDelegate
     func lanScanDidFindNewDevice(_ device: MMDevice!) {
-        let newDevice = MDDevice(ip: device.ipAddress, type: .notActive, computerName: device.hostname)
-        self.addNewDevice(newDevice, to: .allDevices)
-        multipleSocketConnect.connectTo(device)
+        serialQueue.async(flags: .barrier) {
+            self.lanDevices.append(device)
+            let newDevice = MDDevice(ip: device.ipAddress, type: .notActive, computerName: device.hostname)
+            self.addNewDevice(newDevice, to: .allDevices)
+        }
     }
     
     func lanScanDidFinishScanning(with status: MMLanScannerStatus) {
@@ -161,7 +167,6 @@ extension ScanController: MMLANScannerDelegate {
     
     //MARK: Scanning
     private func startScan() {
-        self.lanScanner.stop()
         self.lanScanner.start()
     }
     
@@ -180,6 +185,9 @@ extension ScanController: MMLANScannerDelegate {
         showAlert(message: message)
         showProgress(false)
         self.state = .didScanned
+        for device in self.lanDevices {
+            multipleSocketConnect.connectTo(device)
+        }
     }
     
     private func showProgress(_ show: Bool) {
@@ -191,15 +199,13 @@ extension ScanController: MMLANScannerDelegate {
         var pageDevices = self.devices[page] ?? []
         pageDevices.append(device)
         self.devices[page] = pageDevices
-        let indexPath = IndexPath(row: devices.count - 1, section: 0)
-        if currentPage == page {
-            DispatchQueue.main.async {
-                self.tableView.beginUpdates()
-                self.tableView.insertRows(at: [indexPath], with: .bottom)
-                self.tableView.endUpdates()
-            }
+        guard let count = self.devices[page]?.count, self.currentPage == page else {return}
+        let indexPath = IndexPath(row: count - 1, section: 0)
+        DispatchQueue.main.async {
+            self.tableView.beginUpdates()
+            self.tableView.insertRows(at: [indexPath], with: .bottom)
+            self.tableView.endUpdates()
         }
-        
     }
 }
 

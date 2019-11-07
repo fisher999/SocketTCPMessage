@@ -38,13 +38,7 @@ class MultipleSocketConnect {
             if let stream = socketStream {
                 self.allStreams.append(stream)
             }
-        }
-        self.sendMessageToAll()
-    }
-    
-    private func sendMessageToAll() {
-        for stream in self.allStreams {
-            stream.writeMessage("Do you understand me?")
+            socketStream?.writeMessage("Do you understand me?", dispatchAfter: 0)
         }
     }
     

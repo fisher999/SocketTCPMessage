@@ -13,6 +13,9 @@
 #include <Foundation/Foundation.h>
 #import "SMTCPSocketStreams.h"
 
+@interface SMTCPServer () <SMTCPSocketStreamsDelegate>
+@end
+
 @implementation SMTCPServer {
     CFSocketRef cfSocket;
 }
@@ -87,11 +90,10 @@
 }
 
 - (void)sendMessage:(NSString *)message toSocketStreams:(SMTCPSocketStreams *)socketStreams {
-    [socketStreams writeMessage:message];
+    [socketStreams writeMessage:message dispatchAfter:3.0];
 }
 
 static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
-    NSLog(@"RECIEVED CONNECTION REQUEST \n");
     if (kCFSocketAcceptCallBack == type) {
         CFSocketNativeHandle nativeSocketHandle = *(CFSocketNativeHandle *)data;
         SMTCPSocketStreams *socketStream = [[SMTCPSocketStreams alloc] init];

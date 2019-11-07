@@ -19,6 +19,8 @@
 @property (strong, nonatomic) NSInputStream *inputStream;
 @property (strong, nonatomic) NSOutputStream *outputStream;
 @property (assign, nonatomic) NSUInteger currentOffset;
+@property (strong, nonatomic) NSOperationQueue *operationQueue;
+@property (strong, nonatomic) NSBlockOperation *connectOperation;
 
 @end
 
@@ -27,53 +29,75 @@
     if (self = [super init]) {
         _ip = ip;
         _port = port;
+        _operationQueue = [[NSOperationQueue alloc] init];
+    }
+    return self;
+}
+
+- (instancetype)init
+{
+    self = [super init];
+    if (self) {
+        _operationQueue = [[NSOperationQueue alloc] init];
     }
     return self;
 }
 
 - (void)connect {
-    CFReadStreamRef readStream;
-    CFWriteStreamRef writeStream;
-    CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef)_ip, (UInt32)_port, &readStream, &writeStream);
-    CFRetain(readStream);
-    CFRetain(writeStream);
-    _inputStream = (__bridge_transfer NSInputStream *)readStream;
-    _outputStream = (__bridge_transfer NSOutputStream *)writeStream;
-    CFRelease(readStream);
-    CFRelease(writeStream);
-    if (!(_inputStream && _outputStream)) {
-        return;
-    }
-    [_inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [_outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [_inputStream open];
-    [_outputStream open];
-    _inputStream.delegate = self;
-    _isConnected = YES;
+    __weak SMTCPSocketStreams *weakSelf = self;
+    _connectOperation = [NSBlockOperation blockOperationWithBlock:^{
+        CFReadStreamRef readStream;
+        CFWriteStreamRef writeStream;
+        CFStreamCreatePairWithSocketToHost(kCFAllocatorDefault, (__bridge CFStringRef)weakSelf.ip, (UInt32)weakSelf.port, &readStream, &writeStream);
+        CFRetain(readStream);
+        CFRetain(writeStream);
+        weakSelf.inputStream = (__bridge_transfer NSInputStream *)readStream;
+        weakSelf.outputStream = (__bridge_transfer NSOutputStream *)writeStream;
+        CFRelease(readStream);
+        CFRelease(writeStream);
+        if (!(weakSelf.inputStream && weakSelf.outputStream)) {
+            return;
+        }
+        [weakSelf.inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [weakSelf.outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [weakSelf.inputStream open];
+        [weakSelf.outputStream open];
+        weakSelf.inputStream.delegate = self;
+        [weakSelf setConnected: YES];
+    }];
+    [_operationQueue addOperation:_connectOperation];
+}
+
+-(void)setConnected: (bool) connected {
+    _isConnected = connected;
 }
 
 - (void)handleSocketEventsWithNativeHandle:(CFSocketNativeHandle) handle {
-    [self setIpAndPortFromNativeSocketHandle:handle];
-    CFReadStreamRef readStream;
-    CFWriteStreamRef writeStream;
-    CFStreamCreatePairWithSocket(kCFAllocatorDefault, handle, &readStream, &writeStream);
-    CFRetain(readStream);
-    CFRetain(writeStream);
-    CFReadStreamSetProperty(readStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
-    CFWriteStreamSetProperty(writeStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
-    _inputStream = (__bridge_transfer NSInputStream *)readStream;
-    _outputStream = (__bridge_transfer NSOutputStream *)writeStream;
-    CFRelease(readStream);
-    CFRelease(writeStream);
-    if (!(_inputStream && _outputStream)) {
-        return;
-    }
-    [_inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [_outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
-    [_inputStream open];
-    [_outputStream open];
-    _inputStream.delegate = self;
-    _isConnected = YES;
+    __weak SMTCPSocketStreams *weakSelf = self;
+    _connectOperation = [NSBlockOperation blockOperationWithBlock:^{
+        [weakSelf setIpAndPortFromNativeSocketHandle:handle];
+        CFReadStreamRef readStream;
+        CFWriteStreamRef writeStream;
+        CFStreamCreatePairWithSocket(kCFAllocatorDefault, handle, &readStream, &writeStream);
+        CFRetain(readStream);
+        CFRetain(writeStream);
+        CFReadStreamSetProperty(readStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
+        CFWriteStreamSetProperty(writeStream, kCFStreamPropertyShouldCloseNativeSocket, kCFBooleanTrue);
+        weakSelf.inputStream = (__bridge_transfer NSInputStream *)readStream;
+        weakSelf.outputStream = (__bridge_transfer NSOutputStream *)writeStream;
+        CFRelease(readStream);
+        CFRelease(writeStream);
+        if (!(weakSelf.inputStream && weakSelf.outputStream)) {
+            return;
+        }
+        [weakSelf.inputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [weakSelf.outputStream scheduleInRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
+        [weakSelf.inputStream open];
+        [weakSelf.outputStream open];
+        weakSelf.inputStream.delegate = weakSelf;
+        [weakSelf setConnected:YES];
+    }];
+    [_operationQueue addOperation:_connectOperation];
 }
 
 - (void)setIpAndPortFromNativeSocketHandle: (CFSocketNativeHandle) nativeSocketHandle {
@@ -95,25 +119,28 @@
 
     _ip   = [NSString stringWithFormat:@"%s", ipstr];
     _port = portNumber;
+    NSLog(@"Connect from ip: %@ port: %li", _ip, _port);
 }
 
-- (void)writeMessage:(NSString *)message {
+- (void)writeMessage:(NSString *)message dispatchAfter:(NSTimeInterval)time {
     __weak SMTCPSocketStreams *weakSelf = self;
-    dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
-        NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
-        uint8_t *dataBytes = (uint8_t *)[messageData bytes];
-        dataBytes += [weakSelf currentOffset];
-        NSUInteger length = [messageData length] - [weakSelf currentOffset] > 1024 ? 1024 : [messageData length] - [weakSelf currentOffset];
-        sleep(3);
-        NSUInteger sentLength = [[weakSelf outputStream] write: dataBytes maxLength: length];
-        NSLog(@"message: %@", message);
-        if (sentLength > 0) {
-            weakSelf.currentOffset += sentLength;
-            if (weakSelf.currentOffset == [messageData length]) {
-                weakSelf.currentOffset = 0;
+    NSBlockOperation *writeOperation = [NSBlockOperation blockOperationWithBlock:^{
+        [NSThread sleepForTimeInterval:time];
+            NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
+            uint8_t *dataBytes = (uint8_t *)[messageData bytes];
+            dataBytes += [weakSelf currentOffset];
+            NSUInteger length = [messageData length] - [weakSelf currentOffset] > 1024 ? 1024 : [messageData length] - [weakSelf currentOffset];
+            NSUInteger sentLength = [[weakSelf outputStream] write: dataBytes maxLength: length];
+            NSLog(@"message: %@", message);
+            if (sentLength > 0) {
+                weakSelf.currentOffset += sentLength;
+                if (weakSelf.currentOffset == [messageData length]) {
+                    weakSelf.currentOffset = 0;
+                }
             }
-        }
-    });
+    }];
+    [writeOperation addDependency:_connectOperation];
+    [_operationQueue addOperation:writeOperation];
 }
 
 - (NSString *)readFromInputStream:(NSInputStream *) inputStream {
@@ -133,7 +160,10 @@
 - (void)close {
     [_inputStream close];
     [_outputStream close];
+    _inputStream = nil;
+    _outputStream = nil;
     _isConnected = NO;
+    [_operationQueue cancelAllOperations];
 }
 
 - (void)dealloc {
@@ -150,10 +180,12 @@
         case NSStreamEventHasBytesAvailable:
             if ([aStream isKindOfClass:[NSInputStream class]]) {
                 __weak SMTCPSocketStreams *weakSelf = self;
-                dispatch_async(dispatch_get_global_queue(QOS_CLASS_DEFAULT, 0), ^{
+                NSBlockOperation *readOperation = [NSBlockOperation blockOperationWithBlock:^{
                     NSString *message = [weakSelf readFromInputStream:(NSInputStream *) aStream];
                     [[weakSelf delegate] SMTCPSocketStreams:weakSelf didReceivedMessage:message atIp:[weakSelf ip] atPort:[weakSelf port]];
-                });
+                }];
+                [readOperation addDependency:_connectOperation];
+                [_operationQueue addOperation:readOperation];
             }
             break;
         default:
