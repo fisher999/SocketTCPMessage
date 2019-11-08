@@ -7,16 +7,15 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <AppKit/AppKit.h>
 #import "SMTCPServer.h"
+#import "AppDelegate.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        SMTCPServer *server = [[SMTCPServer alloc] init];
-        if ([server bindWithIntervalFromFirstPort: (NSInteger) 2000 toEndPort: (NSInteger) 2046]) {
-            while (true) {
-                
-            }
-        }
+        NSApplication *application = [NSApplication sharedApplication];
+        [application setDelegate:[[AppDelegate alloc] init] ];
+        [application run];
     }
     return 0;
 }

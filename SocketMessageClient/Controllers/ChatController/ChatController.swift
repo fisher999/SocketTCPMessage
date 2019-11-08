@@ -38,7 +38,7 @@ class ChatController: UIViewController {
         case .socketStream(let socketStream):
             self.socketStream = socketStream
         case .default(let port):
-            self.socketStream = SMTCPSocketStreams(ip: "127.0.0.1", andPort: port)
+            self.socketStream = SMTCPSocketStreams(ip: "192.168.1.8", andPort: port, withSocketQueue: DispatchQueue.main, delegateQueue: DispatchQueue.main)
         }
         super.init(nibName: nil, bundle: nil)
         NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow(sender:)), name: UIResponder.keyboardWillShowNotification, object: nil)
@@ -71,6 +71,10 @@ class ChatController: UIViewController {
         }
     }
     
+    private func reconnect() {
+        self.socketStream.connect()
+    }
+    
     private func setupTable() {
         let nib: UINib = UINib(nibName: MessageCell.id, bundle: nil)
         self.tableView.register(nib, forCellReuseIdentifier: MessageCell.id)
@@ -86,9 +90,30 @@ class ChatController: UIViewController {
 
 //MARK: -SocketStreamDelegate
 extension ChatController: SMTCPSocketStreamsDelegate {
+    func smtcpSocketStreamsDidConnect(_ socketStreams: SMTCPSocketStreams!) {
+        DispatchQueue.main.async {
+            self.receiveMessage("User did connected")
+        }
+    }
+    
+    func smtcpSocketStreamsDidDiconnect(_ socketStreams: SMTCPSocketStreams!) {
+        DispatchQueue.main.async {
+            self.receiveMessage("User did disconnected")
+        }
+        reconnect()
+    }
+    
     func smtcpSocketStreams(_ socketStreams: SMTCPSocketStreams!, didReceivedMessage message: String!, atIp ip: String!, atPort port: Int) {
         DispatchQueue.main.async {
             self.receiveMessage(message)
+        }
+        DispatchQueue.main.asyncAfter(deadline: DispatchTime(uptimeNanoseconds: 1000000 * 10)) {
+            if let char = message.lowercased().first, char <= "k", char >= "a" {
+                self.sendMessage("What do you want from me? I am robot!")
+            }
+            else {
+                self.sendMessage("I aprecciate this!")
+            }
         }
     }
 }

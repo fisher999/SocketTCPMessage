@@ -21,11 +21,11 @@
 @end
 
 @implementation SMTCPSocketStreams
-- (instancetype)initWithIp:(NSString *)ip andPort:(NSInteger)port {
+- (instancetype)initWithIp:(NSString *)ip andPort:(NSInteger)port withSocketQueue:(dispatch_queue_t)socketQueue delegateQueue:(dispatch_queue_t)delegateQueue {
     if (self = [super init]) {
         _ip = ip;
         _port = port;
-        _socket = [[GCDAsyncSocket alloc] initWithSocketQueue:dispatch_get_main_queue()];
+        _socket = [[GCDAsyncSocket alloc] initWithDelegate:self delegateQueue:delegateQueue socketQueue:socketQueue];
     }
     return self;
 }
@@ -35,12 +35,13 @@
         _socket = socket;
         _ip = [_socket connectedHost];
         _ip = [_socket connectedHost];
+        [_socket setDelegate:self delegateQueue:dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)];
     }
     return self;
 }
 
 - (bool)connect {
-    [_socket setDelegate:self delegateQueue:dispatch_get_main_queue()];
+    [_socket readDataWithTimeout:-1 tag:0];
     NSError *error = nil;
     _isConnected = [_socket connectToHost:_ip onPort:_port error:&error];
     if (error) {
@@ -55,7 +56,7 @@
 
 - (void)writeMessage:(NSString *)message dispatchAfter:(NSTimeInterval)time {
     NSData *messageData = [message dataUsingEncoding:NSUTF8StringEncoding];
-    [_socket writeData:messageData withTimeout:time tag:0];
+    [_socket writeData:messageData withTimeout:-1 tag:0];
 }
 
 - (NSString *)readData: (NSData *)data {
@@ -64,7 +65,7 @@
 
 
 - (void)close {
-    
+    [_socket disconnect];
 }
 
 - (void)dealloc {
@@ -75,7 +76,17 @@
 
 @implementation SMTCPSocketStreams (GCDAsyncSocketDelegate)
 - (void)socket:(GCDAsyncSocket *)sock didReadData:(NSData *)data withTag:(long)tag {
+    [sock readDataWithTimeout:-1 tag:0];
     NSString *message = [self readData:data];
     [_delegate SMTCPSocketStreams:self didReceivedMessage:message atIp:_ip atPort:_port];
 }
+
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
+    [_delegate SMTCPSocketStreamsDidConnect:self];
+}
+
+- (void)socketDidDisconnect:(GCDAsyncSocket *)sock withError:(nullable NSError *)err {
+    [_delegate SMTCPSocketStreamsDidDiconnect:self];
+}
+
 @end

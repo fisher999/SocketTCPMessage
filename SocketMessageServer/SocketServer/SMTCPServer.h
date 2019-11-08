@@ -16,7 +16,6 @@
 - (bool)bindWithPort: (NSInteger) port;
 - (bool)bindWithIntervalFromFirstPort: (NSInteger) firstPort toEndPort: (NSInteger) endPort;
 - (void)listen;
-- (void)sendMessage: (NSString *) message toSocketStreams: (SMTCPSocketStreams *) socketStreams;
 - (void)close;
 
 @end

@@ -17,9 +17,9 @@ class MultipleSocketConnect {
     var socketDevices: [MDDevice: SMTCPSocketStreams] = [:]
     private var allDevices: [LANDevice] = []
     private var allStreams: [SMTCPSocketStreams] = []
-    private let dispatchGroup: DispatchGroup = DispatchGroup()
-    private let semaphore: DispatchSemaphore = DispatchSemaphore(value: 2)
     private let globalQueue: DispatchQueue = DispatchQueue.global()
+    private let serialQueue: DispatchQueue = DispatchQueue(label: "serialQueue")
+    
     
     weak var delegate: MultipleSocketConnectDelegate?
     
@@ -33,23 +33,21 @@ class MultipleSocketConnect {
     }
     
     func connectTo(_ device: LANDevice) {
-        //guard let self = self else {return}
-            self.allDevices.append(device)
-            for port in self.firstPort ... self.endPort {
-                globalQueue.async { [weak self] in
-                    guard let self = self else {return}
-                    self.semaphore.wait()
-                    print("port: \(port)")
-                    defer {self.semaphore.signal()}
-                    let socketStream = SMTCPSocketStreams(ip: device.ipAddress, andPort: port)
-                    socketStream?.delegate = self
-                    socketStream?.connect()
-                    if let stream = socketStream {
-                        self.allStreams.append(stream)
-                    }
-                    socketStream?.writeMessage("Do you understand me?", dispatchAfter: 0)
+        print("connect to ip: \(String(describing: device.hostname))" )
+        self.allDevices.append(device)
+        for port in self.firstPort ... self.endPort {
+            print("port: \(port)")
+            let socketStream = SMTCPSocketStreams(ip: device.ipAddress, andPort: port, withSocketQueue: globalQueue, delegateQueue: serialQueue)
+            socketStream?.delegate = self
+            socketStream?.connect()
+            if let stream = socketStream {
+                serialQueue.sync { [weak self] in
+                    self?.allStreams.append(stream)
                 }
             }
+            socketStream?.writeMessage("Do you understand me?", dispatchAfter: -1)
+            
+        }
     }
     
     func disconnect() {
@@ -66,6 +64,12 @@ class MultipleSocketConnect {
 
 //MARK: -SMTCPSocketStreamsDelegate
 extension MultipleSocketConnect: SMTCPSocketStreamsDelegate {
+    func smtcpSocketStreamsDidDiconnect(_ socketStreams: SMTCPSocketStreams!) {
+        self.allStreams.removeAll { (stream) -> Bool in
+            return socketStreams.ip == stream.ip && socketStreams.port == stream.port
+        }
+    }
+    
     func smtcpSocketStreams(_ socketStreams: SMTCPSocketStreams!, didReceivedMessage message: String!, atIp ip: String!, atPort port: Int) {
         self.proposeMessageFrom(socketStreams, message, atIp: ip, atPort: port)
     }

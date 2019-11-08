@@ -14,9 +14,9 @@ struct MDDevice {
         case active(port: Int)
     }
     
-    let ip: String
+    let ip: String?
     let type: DeviceType
-    let computerName: String
+    let computerName: String?
     
     var port: Int? {
         switch type {

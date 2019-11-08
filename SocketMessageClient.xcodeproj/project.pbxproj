@@ -27,6 +27,7 @@
 		5772AAEC23755D2000A596BD /* CocoaAsyncSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5772AAE52375551700A596BD /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		5772AAF423756C1B00A596BD /* CocoaAsyncSocket.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5772AAEF2375687300A596BD /* CocoaAsyncSocket.framework */; };
 		5772AAF523756C1B00A596BD /* CocoaAsyncSocket.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 5772AAEF2375687300A596BD /* CocoaAsyncSocket.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		5772AAFA2375870B00A596BD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 5772AAF92375870B00A596BD /* AppDelegate.m */; };
 		577FF48B236B3AB60030058B /* MDDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 577FF48A236B3AB60030058B /* MDDevice.swift */; };
 		577FF48F236B49BA0030058B /* SMTCPSocketStreams.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C724D92365812D00DD1BB0 /* SMTCPSocketStreams.m */; };
 		577FF490236B4A4F0030058B /* SMTCPMulticastDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 57C724DD2365998200DD1BB0 /* SMTCPMulticastDelegate.m */; };
@@ -101,6 +102,9 @@
 		5765D2D52362C6540011881A /* ChatController.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatController.xib; sourceTree = "<group>"; };
 		5772AAE52375551700A596BD /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/Mac/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
 		5772AAEF2375687300A596BD /* CocoaAsyncSocket.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CocoaAsyncSocket.framework; path = Carthage/Build/iOS/CocoaAsyncSocket.framework; sourceTree = "<group>"; };
+		5772AAF72375869E00A596BD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		5772AAF92375870B00A596BD /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		5772AAFB2375DCBF00A596BD /* SocketMessageClient.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = SocketMessageClient.entitlements; sourceTree = "<group>"; };
 		577FF48A236B3AB60030058B /* MDDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MDDevice.swift; sourceTree = "<group>"; };
 		577FF48C236B3DC20030058B /* SocketMessageClient-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SocketMessageClient-Bridging-Header.h"; sourceTree = "<group>"; };
 		57C724D82365812100DD1BB0 /* SMTCPSocketStreams.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMTCPSocketStreams.h; sourceTree = "<group>"; };
@@ -145,6 +149,7 @@
 		573B23D523647C6400F3C3A0 /* SocketMessageServer */ = {
 			isa = PBXGroup;
 			children = (
+				5772AAF8237586A400A596BD /* AppDelegate */,
 				57F172CE2374654500631803 /* SocketMessageServer.entitlements */,
 				57C724DB2365993B00DD1BB0 /* MulticastDelegate */,
 				57C724D72365810C00DD1BB0 /* SocketHandler */,
@@ -241,6 +246,7 @@
 		5765D2BF2362C3890011881A /* SocketMessageClient */ = {
 			isa = PBXGroup;
 			children = (
+				5772AAFB2375DCBF00A596BD /* SocketMessageClient.entitlements */,
 				57FAD402236D805700ADE5F0 /* New Group */,
 				5764A614236745FB002B6B38 /* ExtensionsUtils */,
 				5764A61123674352002B6B38 /* Model */,
@@ -262,6 +268,15 @@
 				57C724DF2366A5A700DD1BB0 /* Cells */,
 			);
 			path = Controllers;
+			sourceTree = "<group>";
+		};
+		5772AAF8237586A400A596BD /* AppDelegate */ = {
+			isa = PBXGroup;
+			children = (
+				5772AAF72375869E00A596BD /* AppDelegate.h */,
+				5772AAF92375870B00A596BD /* AppDelegate.m */,
+			);
+			path = AppDelegate;
 			sourceTree = "<group>";
 		};
 		57C724D72365810C00DD1BB0 /* SocketHandler */ = {
@@ -519,6 +534,7 @@
 				57C724DA2365812D00DD1BB0 /* SMTCPSocketStreams.m in Sources */,
 				573B23D723647C6400F3C3A0 /* main.m in Sources */,
 				573B23DF23647D0300F3C3A0 /* SMTCPServer.m in Sources */,
+				5772AAFA2375870B00A596BD /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -731,7 +747,9 @@
 			baseConfigurationReference = 37ED37DBD9DB9F1454AF6A58 /* Pods-SocketMessageClient.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SocketMessageClient/SocketMessageClient.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = N28UYC6RTZ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -745,6 +763,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = vsemenov.SocketMessageClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "SocketMessageClient-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -756,7 +775,9 @@
 			baseConfigurationReference = B6AF9A1F065052EE869B6A1A /* Pods-SocketMessageClient.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = SocketMessageClient/SocketMessageClient.entitlements;
 				CODE_SIGN_STYLE = Automatic;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
 				DEVELOPMENT_TEAM = N28UYC6RTZ;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -770,6 +791,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = vsemenov.SocketMessageClient;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = "SocketMessageClient-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

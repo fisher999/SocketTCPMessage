@@ -13,7 +13,10 @@
 @class SMTCPSocketStreams;
 
 @protocol SMTCPSocketStreamsDelegate
+@optional
 - (void)SMTCPSocketStreams: (SMTCPSocketStreams *) socketStreams didReceivedMessage: (NSString *) message atIp: (NSString *)ip atPort: (NSInteger) port;
+- (void)SMTCPSocketStreamsDidDiconnect:(SMTCPSocketStreams *)socketStreams;
+- (void)SMTCPSocketStreamsDidConnect:(SMTCPSocketStreams *)socketStreams;
 @end
 
 @interface SMTCPSocketStreams : NSObject
@@ -23,7 +26,7 @@
 @property (assign, readonly, nonatomic) NSInteger port;
 @property (strong, readonly, nonatomic) NSString *ip;
 
-- (instancetype)initWithIp: (NSString *) ip andPort: (NSInteger) port;
+- (instancetype)initWithIp: (NSString *) ip andPort: (NSInteger) port withSocketQueue: (dispatch_queue_t) socketQueue delegateQueue: (dispatch_queue_t) delegateQueue;
 - (instancetype)initWithGCDSocket: (GCDAsyncSocket *) socket;
 - (bool)connect;
 - (void)writeMessage: (NSString *) message dispatchAfter: (NSTimeInterval) time;

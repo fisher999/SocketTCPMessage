@@ -42,7 +42,7 @@ class ScanController: UIViewController {
     private var lanDevices: [LANDevice] = []
     private var state: State = .default
     private var firstPort: Int = 2000
-    private var lastPort: Int = 2046
+    private var lastPort: Int = 2020
         
     //MARK: Life cycle
     override func viewDidLoad() {
@@ -58,6 +58,7 @@ class ScanController: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         stopScan()
+        multipleSocketConnect.disconnect()
     }
     
     //MARK: Setup
@@ -75,17 +76,17 @@ class ScanController: UIViewController {
         showProgress(false)
         setupRefresh()
     }
-    
-    deinit {
-        self.stopScan()
-        self.multipleSocketConnect.disconnect()
-    }
 }
 
 //MARK: -UITableViewDelegate
 extension ScanController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //MARK: Todo
+        tableView.deselectRow(at: indexPath, animated: true)
+        let device = self.devices[currentPage]![indexPath.row]
+        if let socketStream = multipleSocketConnect.socketDevices[device] {
+            let chatController = ChatController(chatType: .socketStream(socketStream: socketStream))
+            self.navigationController?.pushViewController(chatController, animated: true)
+        }
     }
 }
 
@@ -98,6 +99,12 @@ extension ScanController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: DeviceCell.id) as! DeviceCell
         cell.model = self.devices[currentPage]![indexPath.row]
+        switch currentPage {
+        case .activeDevices:
+            cell.selectionStyle = .gray
+        default:
+            cell.selectionStyle = .none
+        }
         return cell
     }
 }
@@ -187,14 +194,12 @@ extension ScanController: MMLANScannerDelegate {
     }
     
     private func finish(withMessage message: String) {
-        showAlert(message: message)
+        //showAlert(message: message)
         showProgress(false)
         self.state = .didScanned
+        self.stopScan()
         for device in self.lanDevices {
-            multipleSocketConnect.connectTo(device)
-        }
-        DispatchQueue.global().async {
-            self.stopScan()
+            self.multipleSocketConnect.connectTo(device)
         }
     }
     
