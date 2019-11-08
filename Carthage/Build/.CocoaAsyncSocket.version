@@ -1,0 +1,9 @@
+{
+  "commitish" : "7.6.3",
+  "Mac" : [
+    {
+      "name" : "CocoaAsyncSocket",
+      "hash" : "079e1d77d42e84baf0825e38557ea36161245cfd37f87a11494e844f30ad95ed"
+    }
+  ]
+}

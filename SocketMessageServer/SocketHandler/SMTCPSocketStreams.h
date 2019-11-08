@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "SMTCPMulticastDelegate.h"
 
+@class GCDAsyncSocket;
 @class SMTCPSocketStreams;
 
 @protocol SMTCPSocketStreamsDelegate
@@ -23,8 +24,8 @@
 @property (strong, readonly, nonatomic) NSString *ip;
 
 - (instancetype)initWithIp: (NSString *) ip andPort: (NSInteger) port;
-- (void)connect;
-- (void)handleSocketEventsWithNativeHandle:(CFSocketNativeHandle) handle;
+- (instancetype)initWithGCDSocket: (GCDAsyncSocket *) socket;
+- (bool)connect;
 - (void)writeMessage: (NSString *) message dispatchAfter: (NSTimeInterval) time;
 - (void)close;
 

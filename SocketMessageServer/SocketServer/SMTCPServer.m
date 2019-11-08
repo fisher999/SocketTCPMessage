@@ -12,56 +12,37 @@
 #include <CoreFoundation/CoreFoundation.h>
 #include <Foundation/Foundation.h>
 #import "SMTCPSocketStreams.h"
+@import CocoaAsyncSocket;
 
-@interface SMTCPServer () <SMTCPSocketStreamsDelegate>
+
+@interface SMTCPServer () <SMTCPSocketStreamsDelegate, GCDAsyncSocketDelegate>
+
+@property (strong, nonatomic) GCDAsyncSocket *socket;
+
 @end
 
-@implementation SMTCPServer {
-    CFSocketRef cfSocket;
-}
+@implementation SMTCPServer
 
 - (instancetype)init
 {
     self = [super init];
     if (self) {
         _socketStreams = [[NSMutableArray alloc] init];
+        _socket = [[GCDAsyncSocket alloc] initWithSocketQueue:dispatch_get_main_queue()];
+        [_socket setDelegate:self delegateQueue:dispatch_get_main_queue()];
     }
     return self;
 }
 
 - (bool)bindWithPort: (NSInteger) port {
-    CFSocketContext context = {0, (__bridge void *)(self), NULL, NULL, NULL};
-    cfSocket = CFSocketCreate(
-        kCFAllocatorDefault,
-        PF_INET,
-        SOCK_STREAM,
-        IPPROTO_TCP,
-        kCFSocketAcceptCallBack,
-        handleConnect,
-        &context);
-    
-    struct sockaddr_in sin;
-    
-    memset(&sin, 0, sizeof(sin));
-    sin.sin_len = sizeof(sin);
-    sin.sin_family = AF_INET;
-    sin.sin_port = htons(port);
-    sin.sin_addr.s_addr= INADDR_ANY;
-     
-    CFDataRef sincfd = CFDataCreate(
-        kCFAllocatorDefault,
-        (UInt8 *)&sin,
-        sizeof(sin));
-     
-    CFSocketError error = CFSocketSetAddress(cfSocket, sincfd);
-    CFRelease(sincfd);
+    NSError *error = nil;
+    [_socket acceptOnPort:port error:&error];
     if (error) {
-        [self close];
+        NSLog(@"Cant bind - Error: %@", error);
         return false;
-    } else {
-        NSLog(@"Binded with port: %li", port);
-        return true;
     }
+    NSLog(@"binded with port %li", port);
+    return true;
 }
 
 - (bool)bindWithIntervalFromFirstPort:(NSInteger)firstPort toEndPort:(NSInteger)endPort {
@@ -75,38 +56,15 @@
 }
 
 - (void)listen {
-    if (cfSocket == nil) {
-        return;
-    }
-    CFRunLoopSourceRef socketsource = CFSocketCreateRunLoopSource(
-        kCFAllocatorDefault,
-        cfSocket,
-        0);
-    CFRunLoopAddSource(
-        CFRunLoopGetCurrent(),
-        socketsource,
-        kCFRunLoopDefaultMode);
-    [[NSRunLoop currentRunLoop] run];
+    
 }
 
 - (void)sendMessage:(NSString *)message toSocketStreams:(SMTCPSocketStreams *)socketStreams {
     [socketStreams writeMessage:message dispatchAfter:3.0];
 }
 
-static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataRef address, const void *data, void *info) {
-    if (kCFSocketAcceptCallBack == type) {
-        CFSocketNativeHandle nativeSocketHandle = *(CFSocketNativeHandle *)data;
-        SMTCPSocketStreams *socketStream = [[SMTCPSocketStreams alloc] init];
-        SMTCPServer *pointerToSelf = (__bridge SMTCPServer *)(info);
-        [[pointerToSelf socketStreams] addObject:socketStream];
-        socketStream.delegate = pointerToSelf;
-        [socketStream handleSocketEventsWithNativeHandle:nativeSocketHandle];
-    }
-}
-
 - (void)close {
-    CFSocketInvalidate(cfSocket);
-    CFRelease(cfSocket);
+
 }
 
 - (void)dealloc
@@ -120,6 +78,17 @@ static void handleConnect(CFSocketRef socket, CFSocketCallBackType type, CFDataR
     if ([message isEqualToString:@"Do you understand me?"]) {
         [self sendMessage:@"Yes, I do!" toSocketStreams:socketStreams];
     }
+}
+
+#pragma mark: GCDAsyncSocketDelegate
+- (void)socket:(GCDAsyncSocket *)sock didAcceptNewSocket:(GCDAsyncSocket *)newSocket {
+    SMTCPSocketStreams *socketStream = [[SMTCPSocketStreams alloc] initWithGCDSocket:newSocket];
+    [self.socketStreams addObject:socketStream];
+    socketStream.delegate = self;
+}
+
+- (void)socket:(GCDAsyncSocket *)sock didConnectToHost:(NSString *)host port:(uint16_t)port {
+    NSLog(@"did connect");
 }
 
 @end

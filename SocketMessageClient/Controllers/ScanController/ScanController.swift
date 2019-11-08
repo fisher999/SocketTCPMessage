@@ -55,6 +55,11 @@ class ScanController: UIViewController {
         startScan()
     }
     
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopScan()
+    }
+    
     //MARK: Setup
     private func setup() {
         let nib: UINib = UINib(nibName: DeviceCell.id, bundle: nil)
@@ -188,7 +193,9 @@ extension ScanController: MMLANScannerDelegate {
         for device in self.lanDevices {
             multipleSocketConnect.connectTo(device)
         }
-        self.stopScan()
+        DispatchQueue.global().async {
+            self.stopScan()
+        }
     }
     
     private func showProgress(_ show: Bool) {
